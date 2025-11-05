@@ -1,0 +1,427 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Styles */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-off-white text-charcoal-grey antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, sans-serif;
+    @apply font-semibold text-midnight-blue;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-charcoal-grey rounded-full hover:bg-midnight-blue transition-colors;
+  }
+}
+
+/* Component Styles */
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-health text-white hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-electric-blue;
+  }
+
+  .btn-secondary {
+    @apply bg-vibrant-teal text-white hover:bg-vibrant-teal/90 hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-vibrant-teal;
+  }
+
+  .btn-accent {
+    @apply bg-electric-blue text-white hover:bg-electric-blue/90 hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-electric-blue;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-charcoal-grey hover:bg-charcoal-grey/10 border border-charcoal-grey/20 focus:ring-charcoal-grey;
+  }
+
+  .btn-danger {
+    @apply bg-warm-coral text-white hover:bg-warm-coral/90 hover:shadow-lg transform hover:-translate-y-0.5 focus:ring-warm-coral;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-300 hover:shadow-large hover:-translate-y-1;
+  }
+
+  .health-card {
+    @apply card-hover bg-gradient-to-br from-white to-soft-mint/20;
+  }
+
+  .premium-card {
+    @apply card-hover bg-gradient-to-br from-midnight-blue to-charcoal-grey text-white;
+  }
+
+  /* Navigation */
+  .navbar-gradient {
+    background: linear-gradient(135deg, #0D1B2A 0%, #2E3A59 100%);
+  }
+
+  .nav-link {
+    @apply text-white/80 hover:text-white transition-colors duration-200 font-medium px-4 py-2 rounded-lg hover:bg-white/10;
+  }
+
+  .nav-link.active {
+    @apply text-white bg-white/20;
+  }
+
+  /* Forms */
+  .form-input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-electric-blue focus:border-transparent transition-all duration-200 bg-white placeholder-gray-400;
+  }
+
+  .form-input-error {
+    @apply border-warm-coral focus:ring-warm-coral;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-charcoal-grey mb-2;
+  }
+
+  .form-group {
+    @apply space-y-2;
+  }
+
+  /* Health Module Specific */
+  .cycle-tracker-card {
+    @apply health-card border-l-4 border-vibrant-teal;
+  }
+
+  .sleep-tracker-card {
+    @apply health-card border-l-4 border-electric-blue;
+  }
+
+  .fitness-card {
+    @apply health-card border-l-4 border-soft-mint;
+  }
+
+  .nutrition-card {
+    @apply health-card border-l-4 border-warm-coral;
+  }
+
+  .self-care-card {
+    @apply health-card border-l-4 border-vibrant-teal;
+  }
+
+  /* Dashboard Elements */
+  .stat-card {
+    @apply card-hover p-6 text-center;
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold text-midnight-blue mb-2;
+  }
+
+  .stat-label {
+    @apply text-charcoal-grey text-sm font-medium;
+  }
+
+  /* Progress and Health Indicators */
+  .health-progress {
+    @apply w-full bg-gray-200 rounded-full h-3;
+  }
+
+  .health-progress-fill {
+    @apply h-3 rounded-full transition-all duration-500;
+  }
+
+  .progress-excellent {
+    @apply bg-vibrant-teal;
+  }
+
+  .progress-good {
+    @apply bg-soft-mint;
+  }
+
+  .progress-fair {
+    @apply bg-electric-blue;
+  }
+
+  .progress-poor {
+    @apply bg-warm-coral;
+  }
+
+  /* Notifications & Alerts */
+  .alert {
+    @apply p-4 rounded-xl border-l-4;
+  }
+
+  .alert-success {
+    @apply alert border-vibrant-teal bg-soft-mint/30 text-charcoal-grey;
+  }
+
+  .alert-warning {
+    @apply alert border-warm-coral bg-warm-coral/10 text-charcoal-grey;
+  }
+
+  .alert-info {
+    @apply alert border-electric-blue bg-electric-blue/10 text-charcoal-grey;
+  }
+
+  .alert-error {
+    @apply alert border-warm-coral bg-warm-coral/10 text-charcoal-grey;
+  }
+
+  /* Loading States */
+  .loading-spinner {
+    @apply animate-spin rounded-full h-6 w-6 border-b-2 border-electric-blue;
+  }
+
+  .loading-pulse {
+    @apply animate-pulse-soft bg-gray-200 rounded;
+  }
+
+  /* Animations */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-large;
+  }
+
+  .fade-in-up {
+    @apply animate-slide-up;
+  }
+
+  .fade-in-down {
+    @apply animate-slide-down;
+  }
+
+  /* Grid Layouts */
+  .dashboard-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+
+  .modules-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  /* Charts and Data Visualization */
+  .chart-container {
+    @apply card p-6 bg-gradient-to-br from-white to-off-white;
+  }
+
+  .data-point {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .data-point-positive {
+    @apply data-point bg-soft-mint text-charcoal-grey;
+  }
+
+  .data-point-negative {
+    @apply data-point bg-warm-coral/20 text-warm-coral;
+  }
+
+  .data-point-neutral {
+    @apply data-point bg-electric-blue/20 text-electric-blue;
+  }
+
+  /* AI Features */
+  .ai-insight {
+    @apply health-card p-4 border border-soft-mint bg-gradient-to-r from-soft-mint/10 to-soft-mint/5;
+  }
+
+  .ai-tip {
+    @apply ai-insight border-l-4 border-vibrant-teal;
+  }
+
+  .ai-prediction {
+    @apply ai-insight border-l-4 border-electric-blue;
+  }
+
+  /* Community Elements */
+  .community-post {
+    @apply card-hover p-6 hover:border-soft-mint transition-all duration-300;
+  }
+
+  .community-comment {
+    @apply bg-off-white rounded-xl p-4 border border-gray-200;
+  }
+
+  /* Empty States */
+  .empty-state {
+    @apply text-center py-12 px-6 rounded-2xl bg-gradient-to-br from-off-white to-white border-2 border-dashed border-gray-300;
+  }
+
+  .empty-state-icon {
+    @apply text-6xl mb-4 opacity-50;
+  }
+
+  /* Responsive Design */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-12 lg:py-16;
+  }
+
+  /* Mobile Navigation */
+  .mobile-nav {
+    @apply fixed inset-0 z-50 bg-midnight-blue transform transition-transform duration-300 ease-in-out;
+  }
+
+  .mobile-nav-open {
+    @apply translate-x-0;
+  }
+
+  .mobile-nav-closed {
+    @apply -translate-x-full;
+  }
+
+  /* Custom Toggle/Switch */
+  .toggle-switch {
+    @apply relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2;
+  }
+
+  .toggle-switch-on {
+    @apply bg-vibrant-teal;
+  }
+
+  .toggle-switch-off {
+    @apply bg-gray-200;
+  }
+
+  .toggle-switch-handle {
+    @apply pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out;
+  }
+
+  .toggle-switch-handle-on {
+    @apply translate-x-5;
+  }
+
+  .toggle-switch-handle-off {
+    @apply translate-x-0;
+  }
+
+  /* Custom Range Slider */
+  .range-slider {
+    @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    @apply appearance-none h-5 w-5 rounded-full bg-electric-blue cursor-pointer hover:bg-electric-blue/80 transition-colors;
+  }
+
+  .range-slider::-moz-range-thumb {
+    @apply h-5 w-5 rounded-full bg-electric-blue cursor-pointer border-0 hover:bg-electric-blue/80 transition-colors;
+  }
+
+  /* Print Styles */
+  @media print {
+    .no-print {
+      @apply hidden;
+    }
+    
+    .print-break {
+      page-break-after: always;
+    }
+  }
+}
+
+/* Utility Styles */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(rgba(13, 27, 42, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13, 27, 42, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .bg-dots-pattern {
+    background-image: radial-gradient(rgba(13, 27, 42, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* Gradient text */
+  .text-gradient-health {
+    @apply bg-gradient-health bg-clip-text text-transparent;
+  }
+
+  .text-gradient-premium {
+    @apply bg-gradient-premium bg-clip-text text-transparent;
+  }
+
+  /* Background blends */
+  .bg-blend-soft {
+    background-blend-mode: multiply;
+  }
+
+  /* Backdrop filters */
+  .backdrop-blur-soft {
+    backdrop-filter: blur(8px);
+  }
+
+  /* Custom animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 20px rgba(26, 188, 156, 0.3); }
+    to { box-shadow: 0 0 30px rgba(26, 188, 156, 0.6); }
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-auto {
+    @apply bg-midnight-blue text-off-white;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    border-width: 2px !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

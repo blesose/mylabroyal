@@ -1,0 +1,85 @@
+/* Royal Color Palette */
+:root {
+  /* Primary Colors */
+  --royal-pink-50: #fdf2f8;
+  --royal-pink-100: #fce7f3;
+  --royal-pink-200: #fbcfe8;
+  --royal-pink-300: #f9a8d4;
+  --royal-pink-400: #f472b6;
+  --royal-pink-500: #ec4899;
+  --royal-pink-600: #db2777;
+  --royal-pink-700: #be185d;
+  --royal-pink-800: #9d174d;
+  --royal-pink-900: #831843;
+
+  /* Royal Blue Colors */
+  --royal-blue-50: #f0f9ff;
+  --royal-blue-100: #e0f2fe;
+  --royal-blue-200: #bae6fd;
+  --royal-blue-300: #7dd3fc;
+  --royal-blue-400: #38bdf8;
+  --royal-blue-500: #0ea5e9;
+  --royal-blue-600: #0284c7;
+  --royal-blue-700: #0369a1;
+  --royal-blue-800: #075985;
+  --royal-blue-900: #0c4a6e;
+
+  /* Sophisticated Neutrals */
+  --royal-pearl: #fafafa;
+  --royal-ivory: #fffff0;
+  --royal-charcoal: #374151;
+  --royal-silver: #e5e7eb;
+  --royal-gold: #fbbf24;
+
+  /* Gradients */
+  --royal-gradient: linear-gradient(135deg, var(--royal-pink-400) 0%, var(--royal-blue-400) 100%);
+  --royal-gradient-dark: linear-gradient(135deg, var(--royal-pink-600) 0%, var(--royal-blue-600) 100%);
+  --royal-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+}
+
+/* Royal Animations */
+@keyframes royal-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes royal-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(14, 165, 233, 0.4); }
+}
+
+@keyframes royal-slide-in {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Royal Utility Classes */
+.royal-glass {
+  background: var(--royal-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.royal-gradient-text {
+  background: var(--royal-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.royal-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.royal-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.royal-float {
+  animation: royal-float 6s ease-in-out infinite;
+}
+
+.royal-glow {
+  animation: royal-glow 2s ease-in-out infinite alternate;
+}
