@@ -12,9 +12,9 @@ import MenHealth from './pages/MenHealth';
 import FitnessNutrition from './pages/FitnessNutrition';
 import SleepRecovery from './pages/SleepRecovery';
 import SelfCare from './pages/SelfCare';
-// import Community from './pages/Community';
 import LabInsights from './pages/LabInsights';
 import CommunityPost from './pages/Community/communityPost';
+import ArticleDetails from './pages/FemaleHealth/articleDetails';
 
 // Protected Route Wrapper
 // const ProtectedRoute = ({ children }) => {
@@ -39,9 +39,12 @@ function AppRoutes() {
         element={
           // <ProtectedRoute>
             <FemaleHealth />
+            
           // </ProtectedRoute>
         }
       />
+      <Route path="/female-health/education/:id" element={<ArticleDetails />} />
+
       <Route
         path="/men-health/*"
         element={

@@ -1,5 +1,4 @@
 import React from 'react';
-
 const Education = () => {
   const sleepStages = [
     {
@@ -60,7 +59,7 @@ const Education = () => {
       <h2 className="text-3xl font-bold text-gray-800 mb-6">Sleep Education</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className=" bg-white rounded-xl shadow-lg p-4">
           <h3 className="text-2xl font-bold text-gray-800 mb-4">The Science of Sleep</h3>
           <div className="prose text-gray-600">
             <p className="mb-4">
@@ -69,16 +68,16 @@ const Education = () => {
             </p>
             
             <h4 className="font-semibold text-gray-800 mt-6 mb-3">Why Sleep Matters:</h4>
-            <ul className="space-y-2">
-              <li>• Brain function and emotional well-being</li>
-              <li>• Physical health and disease prevention</li>
-              <li>• Safety and performance in daily activities</li>
-              <li>• Growth and development in children/teens</li>
+            <ul className="space-y-2 p-1">
+              <li>Brain function and emotional well-being</li>
+              <li>Physical health and disease prevention</li>
+              <li>Safety and performance in daily activities</li>
+              <li>Growth and development in children/teens</li>
             </ul>
           </div>
         </div>
 
-        <div className="bg-blue-50 rounded-2xl p-6 border-2 border-blue-200">
+        <div className="bg-blue-50 rounded-2xl p-2 border-2 border-blue-200">
           <h3 className="text-2xl font-bold text-blue-800 mb-4">Sleep Stages Cycle</h3>
           <div className="space-y-4">
             {sleepStages.map((stage, index) => (
@@ -97,7 +96,7 @@ const Education = () => {
 
       <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
         <h3 className="text-2xl font-bold text-gray-800 mb-6">Common Sleep Disorders</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="text-charcoal-grey grid grid-cols-1 md:grid-cols-2 gap-6">
           {sleepDisorders.map((disorder, index) => (
             <div key={index} className="border-2 border-gray-200 rounded-xl p-4 hover-lift transition-all duration-300">
               <h4 className="font-semibold text-red-600 mb-2">{disorder.name}</h4>
@@ -138,7 +137,7 @@ const Education = () => {
           </ul>
         </div>
 
-        <div className="bg-purple-50 rounded-2xl p-6 border-2 border-purple-200">
+        <div className="bg-purple-50 rounded-xl p-2 border-2 border-purple-200">
           <h3 className="text-xl font-semibold text-purple-800 mb-4">Sleep & Health Connection</h3>
           <div className="space-y-3 text-purple-700">
             <p><strong>Immune System:</strong> Sleep helps fight infections</p>

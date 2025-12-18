@@ -1,5 +1,5 @@
-// src/services/api.js
 import axios from 'axios';
+
 
 const API_BASE_URL =   'https://mylab-lts4.onrender.com/';
 
@@ -43,6 +43,10 @@ class ApiService {
     const response = await this.client.post('/users/login', credentials);
     return response.data;
   }
+
+async logout() {
+    localStorage.removeItem("token");
+  };
 
   async getProfile(userId) {
     const response = await this.client.get(`/users/profile/${userId}`);
@@ -254,100 +258,26 @@ class ApiService {
     const response = await this.client.get('/labinsights/lab/dashboard');
     return response.data;
   }
-  async downloadWeeklyReport() {
-    const response = await this.client.get('/labinsights/lab/weekly-report/download');
+  // async downloadWeeklyReport() {
+  //   const response = await this.client.get('/labinsights/lab/weekly-report/download');
+  //   return response.data;
+  // }
+
+  async downloadWeeklyReport(filename = null) {
+  const url = filename 
+    ? `/labinsights/lab/weekly-report/download?filename=${filename}`
+    : `/labinsights/lab/weekly-report/download`;
+  
+  const response = await this.client.get(url, { 
+    responseType: 'blob' // Important for file downloads
+  });
+  return response.data;
+}
+  async generateWeeklyReport() {
+    const response = await this.client.post('/labinsights/lab/weekly-report/generate');
     return response.data;
   }
   
 }
 
 export const apiService = new ApiService();
-
-// const BASE_URL = 'http://localhost:9000/api/v1';
-
-// export const apiService = {
-//   // Female Health
-//   async addCycleData(data) {
-//     const response = await fetch(`${BASE_URL}/femalehealth/cycle`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   async getOvulationDates() {
-//     const response = await fetch(`${BASE_URL}/femalehealth/ovulation`);
-//     return response.json();
-//   },
-
-//   async logPregnancy(data) {
-//     const response = await fetch(`${BASE_URL}/femalehealth/pregnancy`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   // Male Health
-//   async logMaleHealth(data) {
-//     const response = await fetch(`${BASE_URL}/menhealth`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   // Fitness & Nutrition
-//   async addFitnessNutrition(data) {
-//     const response = await fetch(`${BASE_URL}/fitnessnutrition`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   // Sleep Recovery
-//   async addSleepRecord(data) {
-//     const response = await fetch(`${BASE_URL}/sleeprecovery`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   // Self Care
-//   async addSelfCare(data) {
-//     const response = await fetch(`${BASE_URL}/selfcare`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   // Community
-//   async getCommunityPosts() {
-//     const response = await fetch(`${BASE_URL}/community/posts`);
-//     return response.json();
-//   },
-
-//   async createPost(data) {
-//     const response = await fetch(`${BASE_URL}/community/posts`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   },
-
-//   // Lab Insights
-//   async getWeeklyReport() {
-//     const response = await fetch(`${BASE_URL}/labinsight/weekly-report`);
-//     return response.blob();
-//   }
-// };
