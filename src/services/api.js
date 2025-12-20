@@ -234,7 +234,7 @@ async logout() {
     return response.data;
   }
   async deleteSelfCare(id) {
-    const response = await this.client.get(`/selfhealth/selfcare/delete-selfcare/${id}`);
+    const response = await this.client.delete(`/selfhealth/selfcare/delete-selfcare/${id}`);
     return response.data;
   }
   async fetchAllSelfCareActivities(id) {
