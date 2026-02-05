@@ -5,7 +5,6 @@ import {
   TrendingUp, 
   Flame, 
   Timer, 
-  Calendar, 
   Activity, 
   Edit2, 
   Trash2, 
@@ -13,28 +12,25 @@ import {
   RefreshCw,
   Trophy,
   Target,
-  Zap,
-  TrendingDown,
   ChevronRight
 } from 'lucide-react';
 
 const FitnessForm = () => {
   const [fitnessData, setFitnessData] = useState([]);
   const [form, setForm] = useState({
-    activity: '',
+    activityType: '',
     duration: '',
-    caloriesBurned: '',
-    date: new Date().toISOString().split('T')[0],
     intensity: 'medium',
+    frequency: '3',
+    goal: 'weight_loss',
     notes: ''
   });
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
-    totalCalories: 0,
     totalDuration: 0,
     activitiesCount: 0,
-    avgCalories: 0
+    avgDuration: 0
   });
   const [activeTab, setActiveTab] = useState('all');
 
@@ -52,20 +48,27 @@ const FitnessForm = () => {
     { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800', icon: '🐢' },
     { value: 'medium', label: 'Medium', color: 'bg-yellow-100 text-yellow-800', icon: '🚶‍♂️' },
     { value: 'high', label: 'High', color: 'bg-orange-100 text-orange-800', icon: '🏃‍♂️' },
-    { value: 'extreme', label: 'Extreme', color: 'bg-red-100 text-red-800', icon: '🔥' },
+  ];
+
+  // Fitness goals
+  const fitnessGoals = [
+    { value: 'weight_loss', label: 'Weight Loss', icon: '⚖️' },
+    { value: 'muscle_gain', label: 'Muscle Gain', icon: '💪' },
+    { value: 'endurance', label: 'Endurance', icon: '🏃‍♂️' },
+    { value: 'flexibility', label: 'Flexibility', icon: '🧘‍♂️' },
+    { value: 'general_health', label: 'General Health', icon: '❤️' },
   ];
 
   const calculateStats = (data) => {
-    const totalCalories = data.reduce((sum, item) => sum + (parseInt(item.caloriesBurned) || 0), 0);
-    const totalDuration = data.reduce((sum, item) => sum + (parseInt(item.duration) || 0), 0);
-    const activitiesCount = data.length;
-    const avgCalories = activitiesCount > 0 ? Math.round(totalCalories / activitiesCount) : 0;
+    const safeData = Array.isArray(data) ? data : [];
+    const totalDuration = safeData.reduce((sum, item) => sum + (parseInt(item?.duration) || 0), 0);
+    const activitiesCount = safeData.length;
+    const avgDuration = activitiesCount > 0 ? Math.round(totalDuration / activitiesCount) : 0;
 
     setStats({
-      totalCalories,
       totalDuration,
       activitiesCount,
-      avgCalories
+      avgDuration
     });
   };
 
@@ -86,7 +89,9 @@ const FitnessForm = () => {
 
     try {
       setLoading(true);
-      const data = await apiService.getAllFitness();
+      const response = await apiService.getAllFitness();
+      
+      const data = Array.isArray(response) ? response : [];
       setFitnessData(data);
       calculateStats(data);
       
@@ -105,7 +110,11 @@ const FitnessForm = () => {
           duration: 2000 
         }
       );
-    } catch {
+    } catch (error) {
+      console.error('Error fetching fitness data:', error);
+      setFitnessData([]);
+      calculateStats([]);
+      
       toast.dismiss(loadingToast);
       toast.error(
         <div className="space-y-1">
@@ -133,6 +142,45 @@ const FitnessForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validate form
+    const errors = [];
+    if (!form.activityType.trim()) errors.push('Activity type is required');
+    if (!form.duration || parseInt(form.duration) < 10) errors.push('Duration must be at least 10 minutes');
+    if (!form.frequency || parseInt(form.frequency) < 1 || parseInt(form.frequency) > 7) errors.push('Frequency must be between 1 and 7 days per week');
+    if (!form.intensity) errors.push('Intensity level is required');
+    if (!form.goal) errors.push('Fitness goal is required');
+    
+    if (errors.length > 0) {
+      toast.error(
+        <div className="space-y-1">
+          <div className="font-bold">❌ Validation Error</div>
+          <div className="text-sm">
+            {errors.map((error, idx) => (
+              <div key={idx}>• {error}</div>
+            ))}
+          </div>
+        </div>,
+        { 
+          style: {
+            background: 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)',
+            color: '#fff',
+            borderRadius: '12px',
+          },
+          duration: 4000 
+        }
+      );
+      return;
+    }
+    
+    // Format data for backend
+    const formattedData = {
+      activityType: form.activityType.trim(),
+      duration: parseInt(form.duration),
+      intensity: form.intensity,
+      frequency: parseInt(form.frequency),
+      goal: form.goal
+    };
+    
     const submitToast = toast.loading(
       <div className="flex items-center space-x-3">
         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -152,7 +200,7 @@ const FitnessForm = () => {
 
     try {
       if (editingId) {
-        await apiService.updateFitness(editingId, form);
+        await apiService.updateFitness(editingId, formattedData);
         toast.dismiss(submitToast);
         toast.success(
           <div className="space-y-2">
@@ -160,7 +208,7 @@ const FitnessForm = () => {
               <div className="text-2xl">✏️</div>
               <div>
                 <div className="font-bold text-lg">Activity Updated!</div>
-                <div className="text-sm opacity-90">{form.activity} has been updated</div>
+                <div className="text-sm opacity-90">{form.activityType} has been updated</div>
               </div>
             </div>
           </div>,
@@ -174,7 +222,7 @@ const FitnessForm = () => {
           }
         );
       } else {
-        await apiService.createFitness(form);
+        await apiService.createFitness(formattedData);
         toast.dismiss(submitToast);
         toast.success(
           <div className="space-y-2">
@@ -182,7 +230,7 @@ const FitnessForm = () => {
               <div className="text-2xl">🎉</div>
               <div>
                 <div className="font-bold text-lg">Activity Added!</div>
-                <div className="text-sm opacity-90">{form.activity} has been recorded</div>
+                <div className="text-sm opacity-90">{form.activityType} has been recorded</div>
               </div>
             </div>
           </div>,
@@ -197,22 +245,24 @@ const FitnessForm = () => {
         );
       }
       
+      // Reset form
       setForm({
-        activity: '',
+        activityType: '',
         duration: '',
-        caloriesBurned: '',
-        date: new Date().toISOString().split('T')[0],
         intensity: 'medium',
+        frequency: '3',
+        goal: 'weight_loss',
         notes: ''
       });
       setEditingId(null);
       fetchFitness();
-    } catch {
+    } catch (error) {
+      console.error('Error submitting form:', error);
       toast.dismiss(submitToast);
       toast.error(
         <div className="space-y-1">
           <div className="font-bold">❌ Operation Failed</div>
-          <div className="text-sm">Unable to save activity. Please try again.</div>
+          <div className="text-sm">{error.response?.data?.message || error.message || 'Unable to save activity. Please try again.'}</div>
         </div>,
         { 
           style: {
@@ -302,7 +352,14 @@ const FitnessForm = () => {
   };
 
   const handleEdit = (item) => {
-    setForm(item);
+    setForm({
+      activityType: item.activityType || '',
+      duration: item.duration || '',
+      intensity: item.intensity || 'medium',
+      frequency: item.frequency || '3',
+      goal: item.goal || 'weight_loss',
+      notes: item.aiTip || ''
+    });
     setEditingId(item._id);
     toast('✏️ Editing mode activated! Update your activity details.', {
       icon: '📝',
@@ -316,6 +373,7 @@ const FitnessForm = () => {
   };
 
   const getActivityIcon = (activity) => {
+    if (!activity) return '🏅';
     const activityLower = activity.toLowerCase();
     if (activityLower.includes('run') || activityLower.includes('jog')) return '🏃‍♂️';
     if (activityLower.includes('walk')) return '🚶‍♂️';
@@ -328,20 +386,50 @@ const FitnessForm = () => {
     return '🏅';
   };
 
-  const filteredData = activeTab === 'all' 
-    ? fitnessData 
-    : fitnessData.filter(item => {
-        const activityLower = item.activity.toLowerCase();
-        if (activeTab === 'cardio') return activityLower.includes('run') || activityLower.includes('jog') || activityLower.includes('cycle') || activityLower.includes('swim');
-        if (activeTab === 'strength') return activityLower.includes('lift') || activityLower.includes('weight') || activityLower.includes('strength');
-        if (activeTab === 'flexibility') return activityLower.includes('yoga') || activityLower.includes('stretch');
-        if (activeTab === 'sports') return activityLower.includes('soccer') || activityLower.includes('basketball') || activityLower.includes('tennis');
-        return true;
-      });
+  // Calculate calories for display (frontend only)
+  const calculateCaloriesBurned = (duration, intensity) => {
+    const factor = intensity === "high" ? 10 : intensity === "medium" ? 7 : 5;
+    return Math.round(duration * factor);
+  };
+
+  // Safe filtered data calculation
+  const filteredData = (() => {
+    if (!Array.isArray(fitnessData)) return [];
+    
+    if (activeTab === 'all') return fitnessData;
+    
+    return fitnessData.filter(item => {
+      if (!item || !item.activityType) return false;
+      
+      const activityLower = item.activityType.toLowerCase();
+      switch (activeTab) {
+        case 'cardio':
+          return activityLower.includes('run') || activityLower.includes('jog') || 
+                 activityLower.includes('cycle') || activityLower.includes('swim') ||
+                 activityLower.includes('cardio');
+        case 'strength':
+          return activityLower.includes('lift') || activityLower.includes('weight') || 
+                 activityLower.includes('strength') || activityLower.includes('gym');
+        case 'flexibility':
+          return activityLower.includes('yoga') || activityLower.includes('stretch') ||
+                 activityLower.includes('pilates');
+        case 'sports':
+          return activityLower.includes('soccer') || activityLower.includes('basketball') || 
+                 activityLower.includes('tennis') || activityLower.includes('football') ||
+                 activityLower.includes('volleyball');
+        default:
+          return true;
+      }
+    });
+  })();
+
+  // Calculate total calories for stats
+  const totalCalories = filteredData.reduce((sum, item) => {
+    return sum + calculateCaloriesBurned(item.duration || 0, item.intensity || 'medium');
+  }, 0);
 
   return (
     <div className="text-charcoal-grey min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
-      {/* React Hot Toast Container */}
       <Toaster
         position="top-center"
         containerStyle={{
@@ -381,13 +469,13 @@ const FitnessForm = () => {
             </button>
           </div>
 
-          {/* Stats Cards */}
+          {/* Stats Cards - Only show actual data */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-5 rounded-2xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm opacity-90">Total Calories</p>
-                  <p className="text-2xl font-bold">{stats.totalCalories.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">{totalCalories.toLocaleString()}</p>
                   <p className="text-xs opacity-80 mt-1">kcal burned</p>
                 </div>
                 <Flame className="h-10 w-10 opacity-80" />
@@ -419,8 +507,8 @@ const FitnessForm = () => {
             <div className="bg-gradient-to-br from-orange-500 to-yellow-500 text-white p-5 rounded-2xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm opacity-90">Avg Calories</p>
-                  <p className="text-2xl font-bold">{stats.avgCalories}</p>
+                  <p className="text-sm opacity-90">Avg Duration</p>
+                  <p className="text-2xl font-bold">{stats.avgDuration}m</p>
                   <p className="text-xs opacity-80 mt-1">per workout</p>
                 </div>
                 <TrendingUp className="h-10 w-10 opacity-80" />
@@ -443,11 +531,11 @@ const FitnessForm = () => {
                   <button
                     onClick={() => {
                       setForm({
-                        activity: '',
+                        activityType: '',
                         duration: '',
-                        caloriesBurned: '',
-                        date: new Date().toISOString().split('T')[0],
                         intensity: 'medium',
+                        frequency: '3',
+                        goal: 'weight_loss',
                         notes: ''
                       });
                       setEditingId(null);
@@ -463,12 +551,12 @@ const FitnessForm = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Activity Name</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Activity Type</label>
                     <input
                       type="text"
-                      placeholder="e.g., Morning Run, Yoga Session, Weight Training"
-                      value={form.activity}
-                      onChange={(e) => setForm({ ...form, activity: e.target.value })}
+                      placeholder="e.g., Running, Weight Lifting, Yoga, Swimming"
+                      value={form.activityType}
+                      onChange={(e) => setForm({ ...form, activityType: e.target.value })}
                       className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
                       required
                     />
@@ -476,7 +564,7 @@ const FitnessForm = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Intensity Level</label>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       {intensityLevels.map((level) => (
                         <button
                           key={level.value}
@@ -504,48 +592,55 @@ const FitnessForm = () => {
                     </label>
                     <input
                       type="number"
-                      placeholder="e.g., 45"
+                      placeholder="e.g., 45 (min: 10)"
                       value={form.duration}
                       onChange={(e) => setForm({ ...form, duration: e.target.value })}
                       className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
                       required
-                      min="1"
+                      min="10"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <Flame className="inline h-4 w-4 mr-2" />
-                      Calories Burned
+                      <Target className="inline h-4 w-4 mr-2" />
+                      Days per Week
                     </label>
                     <input
                       type="number"
-                      placeholder="e.g., 350"
-                      value={form.caloriesBurned}
-                      onChange={(e) => setForm({ ...form, caloriesBurned: e.target.value })}
+                      placeholder="e.g., 3 (1-7)"
+                      value={form.frequency}
+                      onChange={(e) => setForm({ ...form, frequency: e.target.value })}
                       className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
                       required
                       min="1"
+                      max="7"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <Calendar className="inline h-4 w-4 mr-2" />
-                      Date
+                      <Trophy className="inline h-4 w-4 mr-2" />
+                      Fitness Goal
                     </label>
-                    <input
-                      type="date"
-                      value={form.date}
-                      onChange={(e) => setForm({ ...form, date: e.target.value })}
+                    <select
+                      value={form.goal}
+                      onChange={(e) => setForm({ ...form, goal: e.target.value })}
                       className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
                       required
-                    />
+                    >
+                      <option value="">Select a goal</option>
+                      {fitnessGoals.map((goal) => (
+                        <option key={goal.value} value={goal.value}>
+                          {goal.icon} {goal.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Personal Notes (Optional)</label>
                   <textarea
                     placeholder="How did you feel? Any achievements or challenges?"
                     value={form.notes}
@@ -605,7 +700,7 @@ const FitnessForm = () => {
                 <h2 className="text-2xl font-bold text-gray-800">Activity History</h2>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-500">
-                    {filteredData.length} activities
+                    {Array.isArray(filteredData) ? filteredData.length : 0} activities
                   </span>
                 </div>
               </div>
@@ -615,47 +710,78 @@ const FitnessForm = () => {
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                   <p className="mt-4 text-gray-600">Loading your fitness data...</p>
                 </div>
-              ) : filteredData.length === 0 ? (
+              ) : !Array.isArray(filteredData) || filteredData.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🏃‍♂️</div>
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">No Activities Yet</h3>
-                  <p className="text-gray-500">Start by logging your first workout above!</p>
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    {!Array.isArray(filteredData) ? 'Data format error' : 'No Activities Yet'}
+                  </h3>
+                  <p className="text-gray-500">
+                    {!Array.isArray(filteredData) 
+                      ? 'Please refresh the page or contact support' 
+                      : 'Start by logging your first workout above!'}
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {filteredData.map((item) => {
-                    const intensity = intensityLevels.find(l => l.value === (item.intensity || 'medium'));
+                    const intensity = intensityLevels.find(l => l.value === (item?.intensity || 'medium'));
+                    const calories = calculateCaloriesBurned(item.duration || 0, item.intensity || 'medium');
+                    const goal = fitnessGoals.find(g => g.value === item.goal);
+                    
                     return (
                       <div
-                        key={item._id}
+                        key={item?._id || Math.random()}
                         className="group bg-gradient-to-r from-white to-gray-50 hover:from-blue-50 hover:to-cyan-50 rounded-2xl p-5 shadow-lg border border-gray-200 hover:border-blue-300 transition-all duration-300"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-start space-x-4">
                             <div className="p-3 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl">
-                              <span className="text-2xl">{getActivityIcon(item.activity)}</span>
+                              <span className="text-2xl">{getActivityIcon(item?.activityType)}</span>
                             </div>
-                            <div>
-                              <h4 className="font-bold text-gray-800 text-lg">{item.activity}</h4>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-bold text-gray-800 text-lg">{item?.activityType || 'Unknown Activity'}</h4>
+                                  {item?.grade && (
+                                    <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full mt-1">
+                                      Grade: {item.grade}
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-gray-500">
+                                  {new Date(item?.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
                               <div className="flex flex-wrap items-center gap-3 mt-2">
                                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${intensity?.color || 'bg-gray-100 text-gray-800'}`}>
                                   {intensity?.icon} {intensity?.label}
                                 </span>
                                 <span className="text-gray-600 flex items-center">
                                   <Timer className="h-3 w-3 mr-1" />
-                                  {item.duration} min
+                                  {item?.duration || 0} min
+                                </span>
+                                <span className="text-gray-600 flex items-center">
+                                  <Target className="h-3 w-3 mr-1" />
+                                  {item?.frequency || 0} days/week
                                 </span>
                                 <span className="text-gray-600 flex items-center">
                                   <Flame className="h-3 w-3 mr-1" />
-                                  {item.caloriesBurned} kcal
+                                  {calories} kcal
                                 </span>
-                                <span className="text-gray-600 flex items-center">
-                                  <Calendar className="h-3 w-3 mr-1" />
-                                  {item.date}
-                                </span>
+                                {goal && (
+                                  <span className="text-gray-600 flex items-center">
+                                    {goal.icon} {goal.label}
+                                  </span>
+                                )}
                               </div>
-                              {item.notes && (
-                                <p className="text-gray-600 text-sm mt-3">{item.notes}</p>
+                              {item?.aiTip && (
+                                <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                  <div className="flex items-start space-x-2">
+                                    <span className="text-blue-500">💡</span>
+                                    <p className="text-sm text-gray-700">{item.aiTip}</p>
+                                  </div>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -669,7 +795,7 @@ const FitnessForm = () => {
                               <Edit2 className="h-4 w-4" />
                             </button>
                             <button
-                              onClick={() => handleDelete(item._id, item.activity)}
+                              onClick={() => handleDelete(item._id, item.activityType)}
                               className="p-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-opacity"
                               title="Delete"
                             >
@@ -685,28 +811,9 @@ const FitnessForm = () => {
             </div>
           </div>
 
-          {/* Right Column - Quick Stats & Tips */}
+          {/* Right Column - Tips & Info (no dummy data) */}
           <div className="space-y-6">
-            {/* Quick Stats */}
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 rounded-3xl shadow-2xl">
-              <h3 className="text-xl font-bold mb-4">🔥 Quick Stats</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
-                  <span>Calories Today</span>
-                  <span className="font-bold text-green-400">450 kcal</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
-                  <span>Weekly Goal</span>
-                  <span className="font-bold text-yellow-400">75%</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
-                  <span>Current Streak</span>
-                  <span className="font-bold text-pink-400">7 days</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Fitness Tips */}
+            {/* Fitness Tips - Generic tips only */}
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border border-white/20">
               <h3 className="text-xl font-bold text-gray-800 mb-4">💪 Fitness Tips</h3>
               <div className="space-y-4">
@@ -732,25 +839,22 @@ const FitnessForm = () => {
               </div>
             </div>
 
-            {/* Recent Achievements */}
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-3xl shadow-2xl">
-              <h3 className="text-xl font-bold mb-4">🏆 Recent Achievements</h3>
-              <div className="space-y-3">
-                {[
-                  { icon: '🔥', text: '7-day workout streak', date: 'Today' },
-                  { icon: '⚡', text: 'Personal best: 500 kcal', date: 'Yesterday' },
-                  { icon: '💪', text: 'Completed 30 workouts', date: 'This month' },
-                ].map((achievement, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-xl">{achievement.icon}</span>
-                      <div>
-                        <div className="font-medium">{achievement.text}</div>
-                        <div className="text-xs opacity-80">{achievement.date}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            {/* Weekly Summary - Dynamic based on actual data */}
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 rounded-3xl shadow-2xl">
+              <h3 className="text-xl font-bold mb-4">📊 Weekly Summary</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
+                  <span>Activities This Week</span>
+                  <span className="font-bold text-green-400">{stats.activitiesCount}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
+                  <span>Total Workout Time</span>
+                  <span className="font-bold text-yellow-400">{Math.floor(stats.totalDuration / 60)}h {stats.totalDuration % 60}m</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/10 rounded-xl">
+                  <span>Calories Burned</span>
+                  <span className="font-bold text-pink-400">{totalCalories.toLocaleString()} kcal</span>
+                </div>
               </div>
             </div>
           </div>

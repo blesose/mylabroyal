@@ -86,7 +86,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/lab-insights"
+        path="/labinsights"
         element={
           // <ProtectedRoute>
             <LabInsights />

@@ -213,90 +213,219 @@ const OvulationForm = () => {
     }, 1500);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
     
-    // Validation
-    if (!formData.cycleStart) {
-      toast.custom((t) => (
-        <CustomWarningToast
-          message="Validation Error"
-          description="Please enter your cycle start date"
-        />
-      ), {
-        duration: 3000,
-        position: 'bottom-right',
-      });
-      return;
-    }
+  //   // Validation
+  //   if (!formData.cycleStart) {
+  //     toast.custom((t) => (
+  //       <CustomWarningToast
+  //         message="Validation Error"
+  //         description="Please enter your cycle start date"
+  //       />
+  //     ), {
+  //       duration: 3000,
+  //       position: 'bottom-right',
+  //     });
+  //     return;
+  //   }
 
-    try {
-      // Show loading toast
-      const loadingToast = toast.loading('Saving ovulation data...', {
-        position: 'bottom-right',
-      });
+  //   try {
+  //     // Show loading toast
+  //     const loadingToast = toast.loading('Saving ovulation data...', {
+  //       position: 'bottom-right',
+  //     });
 
-      dispatch({ type: 'SET_LOADING', payload: true });
+  //     dispatch({ type: 'SET_LOADING', payload: true });
 
-      const user = JSON.parse(localStorage.getItem('user'));
-      const ovulationData = {
-        userId: user._id,
-        cycleStart: formData.cycleStart,
-        cycleLength: parseInt(formData.cycleLength),
-        notes: formData.notes,
-        symptoms: formData.symptoms,
-        temperature: formData.temperature,
-        mucusConsistency: formData.mucusConsistency
-      };
+  //     const user = JSON.parse(localStorage.getItem('user'));
+  //     const ovulationData = {
+  //       userId: user._id,
+  //       cycleStart: formData.cycleStart,
+  //       cycleLength: parseInt(formData.cycleLength),
+  //       notes: formData.notes,
+  //       symptoms: formData.symptoms,
+  //       temperature: formData.temperature,
+  //       mucusConsistency: formData.mucusConsistency
+  //     };
 
-      const response = await apiService.createOvulationEntry(ovulationData);
-      console.log('Ovulation saved:', response);
+  //     const response = await apiService.createOvulation(ovulationData);
+  //     console.log('Ovulation saved:', response);
 
-      // Dismiss loading toast
-      toast.dismiss(loadingToast);
+  //     // Dismiss loading toast
+  //     toast.dismiss(loadingToast);
 
-      // Show success toast
-      toast.custom((t) => (
-        <CustomSuccessToast
-          message="Ovulation data saved!"
-          description="Your fertility insights have been recorded"
-          icon={<CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-white" />}
-        />
-      ), {
-        duration: 4000,
-        position: 'bottom-right',
-      });
+  //     // Show success toast
+  //     toast.custom((t) => (
+  //       <CustomSuccessToast
+  //         message="Ovulation data saved!"
+  //         description="Your fertility insights have been recorded"
+  //         icon={<CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-white" />}
+  //       />
+  //     ), {
+  //       duration: 4000,
+  //       position: 'bottom-right',
+  //     });
 
-      // Reset form
-      setFormData({
-        cycleStart: '',
-        cycleLength: 28,
-        notes: '',
-        symptoms: [],
-        temperature: '',
-        mucusConsistency: ''
-      });
-      setShowResults(false);
-      setActiveTab('basics');
+  //     // Reset form
+  //     setFormData({
+  //       cycleStart: '',
+  //       cycleLength: 28,
+  //       notes: '',
+  //       symptoms: [],
+  //       temperature: '',
+  //       mucusConsistency: ''
+  //     });
+  //     setShowResults(false);
+  //     setActiveTab('basics');
       
-    } catch (error) {
-      console.error('Error saving ovulation data:', error);
+  //   } catch (error) {
+  //     console.error('Error saving ovulation data:', error);
       
-      // Show error toast
-      toast.custom((t) => (
-        <CustomErrorToast
-          message="Failed to save ovulation data"
-          description="Please check your connection and try again"
-        />
-      ), {
-        duration: 5000,
-        position: 'bottom-right',
-      });
-    } finally {
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  };
+  //     // Show error toast
+  //     toast.custom((t) => (
+  //       <CustomErrorToast
+  //         message="Failed to save ovulation data"
+  //         description="Please check your connection and try again"
+  //       />
+  //     ), {
+  //       duration: 5000,
+  //       position: 'bottom-right',
+  //     });
+  //   } finally {
+  //     dispatch({ type: 'SET_LOADING', payload: false });
+  //   }
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Validation
+  if (!formData.cycleStart) {
+    toast.custom((t) => (
+      <CustomWarningToast
+        message="Validation Error"
+        description="Please enter your cycle start date"
+      />
+    ), {
+      duration: 3000,
+      position: 'bottom-right',
+    });
+    return;
+  }
 
+  try {
+    // Show loading toast
+    const loadingToast = toast.loading('Saving ovulation data...', {
+      position: 'bottom-right',
+    });
+
+    dispatch({ type: 'SET_LOADING', payload: true });
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // Calculate dates based on cycle data
+    const startDate = new Date(formData.cycleStart);
+    const cycleLength = parseInt(formData.cycleLength) || 28;
+    
+    // Calculate next period date
+    const nextPeriodDate = new Date(startDate);
+    nextPeriodDate.setDate(startDate.getDate() + cycleLength);
+    
+    // Calculate ovulation date (typically 14 days before next period)
+    const ovulationDate = new Date(nextPeriodDate);
+    ovulationDate.setDate(nextPeriodDate.getDate() - 14);
+    
+    // Calculate fertile window (5 days before ovulation through ovulation day)
+    const fertileWindowStart = new Date(ovulationDate);
+    fertileWindowStart.setDate(ovulationDate.getDate() - 5);
+    
+    // Prepare data matching the schema EXACTLY
+    const ovulationData = {
+      userId: user._id,
+      cycleStart: startDate.toISOString(), // Convert to ISO string
+      cycleLength: cycleLength,
+      
+      // THESE ARE REQUIRED BY YOUR SCHEMA:
+      ovulationDate: ovulationDate.toISOString(),
+      fertileWindowStart: fertileWindowStart.toISOString(),
+      fertileWindowEnd: ovulationDate.toISOString(), // Fertile window ends on ovulation day
+      
+      // Optional field
+      notes: formData.notes || '',
+      
+      // REMOVE THESE - they are not in your schema:
+      // symptoms: formData.symptoms,
+      // temperature: formData.temperature,
+      // mucusConsistency: formData.mucusConsistency
+    };
+
+    console.log('Sending ovulation data:', ovulationData);
+
+    const response = await apiService.createOvulation(ovulationData);
+    console.log('Ovulation saved:', response);
+
+    // Dismiss loading toast
+    toast.dismiss(loadingToast);
+
+    // Show success toast
+    toast.custom((t) => (
+      <CustomSuccessToast
+        message="Ovulation data saved!"
+        description="Your fertility insights have been recorded"
+        icon={<CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-white" />}
+      />
+    ), {
+      duration: 4000,
+      position: 'bottom-right',
+    });
+
+    // Reset form
+    setFormData({
+      cycleStart: '',
+      cycleLength: 28,
+      notes: '',
+      symptoms: [],
+      temperature: '',
+      mucusConsistency: ''
+    });
+    setShowResults(false);
+    setActiveTab('basics');
+    
+  } catch (error) {
+    console.error('Full error details:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      requestData: error.config?.data ? JSON.parse(error.config.data) : null
+    });
+    
+    // Show more detailed error
+    let errorMessage = 'Failed to save ovulation data';
+    let errorDetails = 'Please check your connection and try again';
+    
+    if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    }
+    
+    if (error.response?.data?.errors) {
+      errorDetails = Object.values(error.response.data.errors)
+        .map(err => err.message || err)
+        .join(', ');
+    }
+    
+    toast.custom((t) => (
+      <CustomErrorToast
+        message={errorMessage}
+        description={errorDetails}
+      />
+    ), {
+      duration: 5000,
+      position: 'bottom-right',
+    });
+  } finally {
+    dispatch({ type: 'SET_LOADING', payload: false });
+  }
+}; 
   const toggleSymptom = (symptomId) => {
     const isAdding = !formData.symptoms.includes(symptomId);
     setFormData(prev => ({
