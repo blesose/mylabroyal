@@ -1769,7 +1769,7 @@ const MenHealth = () => {
                       ) : (
                         <>
                           <span className="text-xl">📊</span>
-                          <span>Submit Health Data</span>
+                          <span className="text-sm sm:text-base">Submit Health Data</span>
                           <span className="animate-pulse">⚡</span>
                         </>
                       )}

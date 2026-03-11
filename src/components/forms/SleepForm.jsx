@@ -598,7 +598,7 @@ const SleepForm = ({ editingRecord, onSaved }) => {
               ) : (
                 <>
                   <Save className="h-5 w-5" />
-                  <span>{editingRecord ? 'Update Sleep Record' : 'Record My Sleep'}</span>
+                  <span className="text-sm sm:text-base">{editingRecord ? 'Update Sleep Record' : 'Record My Sleep'}</span>
                   <Heart className="h-5 w-5" />
                 </>
               )}

@@ -431,7 +431,7 @@ const FitnessForm = () => {
   return (
     <div className="text-charcoal-grey min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
       <Toaster
-        position="top-center"
+        position="top-right"
         containerStyle={{
           top: 20,
           zIndex: 9999,
@@ -659,12 +659,12 @@ const FitnessForm = () => {
                     {editingId ? (
                       <>
                         <Edit2 className="h-5 w-5" />
-                        <span>Update Activity</span>
+                        <span className="text-sm sm:text-base">Update Activity</span>
                       </>
                     ) : (
                       <>
                         <Plus className="h-5 w-5" />
-                        <span>Log Activity</span>
+                        <span className="text-sm sm:text-base">Log Activity</span>
                       </>
                     )}
                   </div>

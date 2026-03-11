@@ -829,17 +829,17 @@ const NutritionForm = () => {
                     {loading ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-b-2 border-white"></div>
-                        <span>{editingId ? 'Updating...' : 'Logging...'}</span>
+                        <span className="text-sm sm:text-base">{editingId ? 'Updating...' : 'Logging...'}</span>
                       </>
                     ) : editingId ? (
                       <>
                         <Edit2 className="h-4 w-4 md:h-5 md:w-5" />
-                        <span>Update Meal</span>
+                        <span className="text-sm sm:text-base">Update Meal</span>
                       </>
                     ) : (
                       <>
                         <Plus className="h-4 w-4 md:h-5 md:w-5" />
-                        <span>Log Meal</span>
+                        <span className="text-sm sm:text-base">Log Meal</span>
                       </>
                     )}
                   </div>
