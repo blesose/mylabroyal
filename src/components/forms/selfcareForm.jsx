@@ -315,8 +315,8 @@ const SelfCareForm = ({ editingRecord, onSaved }) => {
   const satisfactionFeedback = getSatisfactionFeedback();
 
   const quickDurations = [
-    { label: '5', value: '5', icon: '⏱️', fullLabel: '5 min' },
-    { label: '15', value: '15', icon: '🧘', fullLabel: '5 min' },
+    { label: '5 min', value: '5', icon: '⏱️', fullLabel: '5 min' },
+    { label: '15 min', value: '15', icon: '🧘', fullLabel: '5 min' },
     { label: '30 min', value: '30', icon: '📚', fullLabel: '30 min' },
     { label: '60 min', value: '60', icon: '🏃', fullLabel: '60 min' },
   ];
@@ -325,7 +325,7 @@ const SelfCareForm = ({ editingRecord, onSaved }) => {
     <div className="relative">
       {/* Local Toaster for form-specific notifications */}
       <Toaster
-        position="top-center"
+        position="top-right"
         containerStyle={{
           top: 10,
           zIndex: 9999,
@@ -765,4 +765,4 @@ const SelfCareForm = ({ editingRecord, onSaved }) => {
   );
 };
 
-export default SelfCareForm
+export default SelfCareForm;
