@@ -1,7 +1,6 @@
-
 import axios from 'axios';
-// const API_BASE_URL = 'https://mylab-lts4.onrender.com/';
-const API_BASE_URL = 'http://localhost:9000/';
+const API_BASE_URL = 'https://mylab-lts4.onrender.com/';
+
 
 class ApiService {
   constructor() {
@@ -89,19 +88,7 @@ async getPregnancy(userId) {
   const response = await this.client.get(`api/females/pregnancy/${userId}`);
   return response.data;
 }
-  // // Pregnancy endpoints
-  // async createPregnancy(pregnancyData) {
-  //   const response = await this.client.post('api/females/pregnancy/create-pregnancy', pregnancyData);
-  //   return response.data;
-  // } catch (error) {
-  //   console.error('API error response:', error.response?.data);
-  //   throw error; 
-  // }
 
-  // async getPregnancy(userId) {
-  //   const response = await this.client.get(`api/females/pregnancy/get-pregnancy/${userId}`);
-  //   return response.data;
-  // }
 
   async createOvulation(ovulationData) {
     const response = await this.client.post('api/females/ovulation/create-ovulation', ovulationData);
@@ -165,107 +152,7 @@ async deleteSleepRecord(recordId) {
   const response = await this.client.delete(`api/shealth/sleeprecovery/delete-sleep/${recordId}`);
   return response.data;
 }
-  // Sleep endpoints - FIXED to handle response structure
-// async addSleepRecord(sleepData) {
-//   const response = await this.client.post('api/shealth/sleeprecovery/add-sleep', sleepData);
-//   return response.data;
-// }
 
-// async getSleepHistory() {
-//   try {
-//     const response = await this.client.get('api/shealth/sleeprecovery/fetch-sleep', {
-//       timeout: 15000
-//     });
-//     console.log('📡 Sleep API Response:', response.data);
-    
-//     // Handle the response structure - your backend returns { success: true, data: [...] }
-//     if (response.data && response.data.success && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-    
-//     // Fallback: if response.data is directly an array
-//     if (Array.isArray(response.data)) {
-//       return response.data;
-//     }
-    
-//     // If response.data has a data property that's an array
-//     if (response.data && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-    
-//     console.warn('Unexpected sleep response structure:', response.data);
-//     return [];
-//   } catch (error) {
-//     console.error('❌ Error fetching sleep history:', error.message);
-//     return []; // Return empty array instead of throwing
-//   }
-// }
-
-// async fetchSleepRecordById(recordId) {
-//   const response = await this.client.get(`api/shealth/sleeprecovery/fetch-onesleep/${recordId}`);
-//   return response.data;
-// }
-
-// async updateSleepRecord(recordId, sleepData) {
-//   const response = await this.client.put(`api/shealth/sleeprecovery/update-sleep/${recordId}`, sleepData);
-//   return response.data;
-// }
-
-// async deleteSleepRecord(recordId) {
-//   const response = await this.client.delete(`api/shealth/sleeprecovery/delete-sleep/${recordId}`);
-//   return response.data;
-// }
-  // // Sleep endpoints
-  // async addSleepRecord(sleepData) {
-  //   const response = await this.client.post('api/shealth/sleeprecovery/add-sleep', sleepData);
-  //   return response.data;
-  // }
-
-  // async getSleepHistory() {
-  //   const response = await this.client.get('api/shealth/sleeprecovery/fetch-sleep');
-  //   return response.data;
-  // }
-  
-  // async fetchSleepRecordById(recordId) {
-  //   const response = await this.client.get(`api/shealth/sleeprecovery/fetch-onesleep/${recordId}`);
-  //   return response.data;
-  // }
-  
-  // async updateSleepRecord(recordId, sleepData) {
-  //   const response = await this.client.put(`api/shealth/sleeprecovery/update-sleep/${recordId}`, sleepData);
-  //   return response.data;
-  // }
-  
-  // async deleteSleepRecord(recordId) {
-  //   const response = await this.client.delete(`api/shealth/sleeprecovery/delete-sleep/${recordId}`);
-  //   return response.data;
-  // }
-
-  // // Men's Health endpoints
-  // async createRecordHandler(menHealthData) {
-  //   const response = await this.client.post('api/mens/menhealth/create-record', menHealthData);
-  //   return response.data;
-  // }
-  
-  // async listRecordsHandler() {
-  //   const response = await this.client.get('api/mens/menhealth/list-records');
-  //   return response.data;
-  // }
-  
-  // async getRecordHandler(recordId) {
-  //   const response = await this.client.get(`api/mens/menhealth/${recordId}`);
-  //   return response.data;
-  // }
-  
-  // async updateRecordHandler(recordId, menhealthData) {
-  //   const response = await this.client.put(`api/mens/menhealth/update-record/${recordId}`, menhealthData);
-  //   return response.data;
-  // }
-  
-  // async deleteRecordHandler(recordId) {
-  //   const response = await this.client.delete(`api/mens/menhealth/delete-record/${recordId}`);
-  //   return response.data;
-  // }
 // Men's Health endpoints
 async createRecordHandler(menHealthData) {
   const response = await this.client.post('api/mens/menhealth/create-record', menHealthData);
