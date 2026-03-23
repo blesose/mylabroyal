@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { apiService } from '../../services/api';
 import { 
@@ -23,8 +23,11 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
-  Filter
+  Filter,
+  Search,
+  X
 } from 'lucide-react';
+import FoodSearch from './FoodSearch';
 
 const NutritionForm = () => {
   const [nutritionData, setNutritionData] = useState([]);
@@ -51,6 +54,10 @@ const NutritionForm = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showFoodSearch, setShowFoodSearch] = useState(false);
+  const [selectedFood, setSelectedFood] = useState(null);
+  const [portionMultiplier, setPortionMultiplier] = useState(1);
+  const [showPortionSelector, setShowPortionSelector] = useState(false);
   const itemsPerPage = 5;
 
   // Meal types with icons
@@ -73,10 +80,13 @@ const NutritionForm = () => {
   ];
 
   const calculateStats = (data) => {
-    const totalCalories = data.reduce((sum, item) => sum + (parseInt(item.calories) || 0), 0);
-    const totalProtein = data.reduce((sum, item) => sum + (parseInt(item.protein) || 0), 0);
-    const totalCarbs = data.reduce((sum, item) => sum + (parseInt(item.carbs) || 0), 0);
-    const mealsCount = data.length;
+    // Ensure data is an array
+    const meals = Array.isArray(data) ? data : [];
+    
+    const totalCalories = meals.reduce((sum, item) => sum + (parseFloat(item.calories) || 0), 0);
+    const totalProtein = meals.reduce((sum, item) => sum + (parseFloat(item.protein) || 0), 0);
+    const totalCarbs = meals.reduce((sum, item) => sum + (parseFloat(item.carbs) || 0), 0);
+    const mealsCount = meals.length;
     const dailyAverage = mealsCount > 0 ? Math.round(totalCalories / (mealsCount / 3)) : 0;
 
     setStats({
@@ -105,7 +115,22 @@ const NutritionForm = () => {
 
     try {
       setLoading(true);
-      const data = await apiService.getAllNutrition();
+      const response = await apiService.getAllNutrition();
+      console.log('📡 Nutrition API Response:', response);
+      
+      // Handle different response structures
+      let data = [];
+      if (Array.isArray(response)) {
+        data = response;
+      } else if (response?.data && Array.isArray(response.data)) {
+        data = response.data;
+      } else if (response?.data?.data && Array.isArray(response.data.data)) {
+        data = response.data.data;
+      } else {
+        console.warn('Unexpected response structure:', response);
+        data = [];
+      }
+      
       setNutritionData(data);
       calculateStats(data);
       
@@ -124,7 +149,8 @@ const NutritionForm = () => {
           duration: 2000 
         }
       );
-    } catch {
+    } catch (error) {
+      console.error('❌ Error fetching nutrition:', error);
       toast.dismiss(loadingToast);
       toast.error(
         <div className="space-y-1">
@@ -140,8 +166,66 @@ const NutritionForm = () => {
           duration: 4000 
         }
       );
+      setNutritionData([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle single food selection from search
+  const handleFoodSelect = (food) => {
+    setSelectedFood(food);
+    setShowPortionSelector(true);
+    setShowFoodSearch(false);
+    setPortionMultiplier(1);
+    
+    // Auto-fill basic info
+    setForm({
+      ...form,
+      meal: food.name,
+      calories: food.calories,
+      protein: food.protein,
+      carbs: food.carbs,
+      fats: food.fats,
+      fiber: food.fiber || 0,
+    });
+  };
+
+  // Handle combined meal selection (multiple foods)
+  const handleMultipleFoodSelect = (combinedFood) => {
+    setForm({
+      ...form,
+      meal: combinedFood.name,
+      calories: combinedFood.calories,
+      protein: combinedFood.protein,
+      carbs: combinedFood.carbs,
+      fats: combinedFood.fats,
+      fiber: combinedFood.fiber || 0,
+      notes: combinedFood.ingredients 
+        ? `Combined meal: ${combinedFood.ingredients.map(i => `${i.name} (${i.quantity}x)`).join(', ')}` 
+        : form.notes
+    });
+    
+    toast.success(`Added "${combinedFood.name}" with ${combinedFood.calories} kcal!`, { 
+      icon: '🍽️',
+      duration: 3000
+    });
+    
+    setShowFoodSearch(false);
+  };
+
+  // Handle portion changes
+  const handlePortionChange = (multiplier) => {
+    setPortionMultiplier(multiplier);
+    if (selectedFood) {
+      setForm({
+        ...form,
+        calories: Math.round(selectedFood.calories * multiplier),
+        protein: Math.round(selectedFood.protein * multiplier * 10) / 10,
+        carbs: Math.round(selectedFood.carbs * multiplier * 10) / 10,
+        fats: Math.round(selectedFood.fats * multiplier * 10) / 10,
+        fiber: Math.round((selectedFood.fiber || 0) * multiplier * 10) / 10,
+      });
     }
   };
 
@@ -228,9 +312,11 @@ const NutritionForm = () => {
         notes: ''
       });
       setEditingId(null);
+      setSelectedFood(null);
+      setPortionMultiplier(1);
       fetchNutrition();
       
-      if (parseInt(form.protein) > 30) {
+      if (parseFloat(form.protein) > 30) {
         setTimeout(() => {
           toast('💪 High protein meal! Great for muscle recovery.', {
             icon: '🏋️‍♂️',
@@ -238,7 +324,8 @@ const NutritionForm = () => {
           });
         }, 500);
       }
-    } catch {
+    } catch (error) {
+      console.error('❌ Error saving meal:', error);
       toast.dismiss(submitToast);
       toast.error(
         <div className="space-y-1">
@@ -320,7 +407,8 @@ const NutritionForm = () => {
         }
       );
       fetchNutrition();
-    } catch {
+    } catch (error) {
+      console.error('❌ Error deleting meal:', error);
       toast.dismiss(deleteToast);
       toast.error('Failed to delete meal. Please try again.', {
         style: {
@@ -361,16 +449,28 @@ const NutritionForm = () => {
     });
   };
 
-  const filteredData = activeFilter === 'all' 
-    ? nutritionData 
-    : nutritionData.filter(item => item.mealType === activeFilter);
+  // FIXED: Use useMemo to ensure filteredData is always an array
+  const filteredData = useMemo(() => {
+    if (!Array.isArray(nutritionData)) return [];
+    if (activeFilter === 'all') return nutritionData;
+    return nutritionData.filter(item => item.mealType === activeFilter);
+  }, [nutritionData, activeFilter]);
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // FIXED: Use useMemo for paginated data
+  const paginatedData = useMemo(() => {
+    if (!Array.isArray(filteredData)) return [];
+    return filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  }, [filteredData, currentPage, itemsPerPage]);
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  // FIXED: Calculate total pages safely
+  const totalPages = useMemo(() => {
+    return Array.isArray(filteredData) 
+      ? Math.ceil(filteredData.length / itemsPerPage) 
+      : 0;
+  }, [filteredData, itemsPerPage]);
 
   const StatCard = ({ icon, label, value, unit, color }) => (
     <div className={`bg-gradient-to-br ${color} p-4 rounded-2xl shadow-lg`}>
@@ -392,8 +492,8 @@ const NutritionForm = () => {
 
   // Mobile meal history card
   const MobileMealCard = ({ item }) => {
-    const totalMacros = (parseInt(item.protein) || 0) + (parseInt(item.carbs) || 0) + (parseInt(item.fats) || 0);
-    const proteinPercent = totalMacros > 0 ? Math.round(((parseInt(item.protein) || 0) / totalMacros) * 100) : 0;
+    const totalMacros = (parseFloat(item.protein) || 0) + (parseFloat(item.carbs) || 0) + (parseFloat(item.fats) || 0);
+    const proteinPercent = totalMacros > 0 ? Math.round(((parseFloat(item.protein) || 0) / totalMacros) * 100) : 0;
     
     return (
       <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 mb-3">
@@ -432,11 +532,11 @@ const NutritionForm = () => {
               ></div>
               <div 
                 className="bg-yellow-500"
-                style={{ width: `${Math.round(((parseInt(item.carbs) || 0) / totalMacros) * 100)}%` }}
+                style={{ width: `${Math.round(((parseFloat(item.carbs) || 0) / totalMacros) * 100)}%` }}
               ></div>
               <div 
                 className="bg-purple-500"
-                style={{ width: `${Math.round(((parseInt(item.fats) || 0) / totalMacros) * 100)}%` }}
+                style={{ width: `${Math.round(((parseFloat(item.fats) || 0) / totalMacros) * 100)}%` }}
               ></div>
             </div>
           </div>
@@ -535,21 +635,21 @@ const NutritionForm = () => {
             <StatCard 
               icon="🔥" 
               label="Total Calories" 
-              value={stats.totalCalories.toLocaleString()} 
+              value={Math.round(stats.totalCalories).toLocaleString()} 
               unit="kcal" 
               color="from-orange-500 to-red-500"
             />
             <StatCard 
               icon="💪" 
               label="Total Protein" 
-              value={stats.totalProtein} 
+              value={Math.round(stats.totalProtein)} 
               unit="grams" 
               color="from-blue-500 to-cyan-500"
             />
             <StatCard 
               icon="🌾" 
               label="Total Carbs" 
-              value={stats.totalCarbs} 
+              value={Math.round(stats.totalCarbs)} 
               unit="grams" 
               color="from-yellow-500 to-amber-500"
             />
@@ -568,7 +668,7 @@ const NutritionForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-sm opacity-90">Calories</div>
-                <div className="text-lg font-bold">{stats.totalCalories.toLocaleString()}</div>
+                <div className="text-lg font-bold">{Math.round(stats.totalCalories).toLocaleString()}</div>
               </div>
               <span className="text-xl">🔥</span>
             </div>
@@ -577,7 +677,7 @@ const NutritionForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-sm opacity-90">Protein</div>
-                <div className="text-lg font-bold">{stats.totalProtein}g</div>
+                <div className="text-lg font-bold">{Math.round(stats.totalProtein)}g</div>
               </div>
               <span className="text-xl">💪</span>
             </div>
@@ -586,7 +686,7 @@ const NutritionForm = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-sm opacity-90">Carbs</div>
-                <div className="text-lg font-bold">{stats.totalCarbs}g</div>
+                <div className="text-lg font-bold">{Math.round(stats.totalCarbs)}g</div>
               </div>
               <span className="text-xl">🌾</span>
             </div>
@@ -669,6 +769,21 @@ const NutritionForm = () => {
                 )}
               </div>
 
+              {/* Food Search Button */}
+              <div className="mb-4">
+                <button
+                  type="button"
+                  onClick={() => setShowFoodSearch(true)}
+                  className="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                >
+                  <Search className="h-5 w-5" />
+                  Search & Combine Foods
+                </button>
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  Search for single foods OR combine multiple foods (like bread + egg)
+                </p>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                 {/* Meal Type Selection */}
                 <div>
@@ -700,7 +815,7 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g., Chicken Salad"
+                      placeholder="e.g., Chicken Salad or Bread + Egg"
                       value={form.meal}
                       onChange={(e) => setForm({ ...form, meal: e.target.value })}
                       className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 md:focus:ring-4 focus:ring-green-100 transition-all duration-200"
@@ -723,7 +838,7 @@ const NutritionForm = () => {
                   </div>
                 </div>
 
-                {/* Macronutrients Grid */}
+                {/* Macronutrients Grid - UPDATED with step="any" for decimals */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                   <div>
                     <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
@@ -732,12 +847,13 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="number"
+                      step="any"
                       placeholder="kcal"
                       value={form.calories}
                       onChange={(e) => setForm({ ...form, calories: e.target.value })}
                       className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-red-50 border-2 border-red-200 rounded-xl focus:border-red-400 focus:ring-2 md:focus:ring-4 focus:ring-red-100"
                       required
-                      min="1"
+                      min="0"
                     />
                   </div>
 
@@ -748,6 +864,7 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="number"
+                      step="any"
                       placeholder="g"
                       value={form.protein}
                       onChange={(e) => setForm({ ...form, protein: e.target.value })}
@@ -764,6 +881,7 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="number"
+                      step="any"
                       placeholder="g"
                       value={form.carbs}
                       onChange={(e) => setForm({ ...form, carbs: e.target.value })}
@@ -780,6 +898,7 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="number"
+                      step="any"
                       placeholder="g"
                       value={form.fats}
                       onChange={(e) => setForm({ ...form, fats: e.target.value })}
@@ -797,6 +916,7 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="number"
+                      step="any"
                       placeholder="g"
                       value={form.fiber}
                       onChange={(e) => setForm({ ...form, fiber: e.target.value })}
@@ -811,7 +931,7 @@ const NutritionForm = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g., Homemade"
+                      placeholder="e.g., Homemade, or combined meal details"
                       value={form.notes}
                       onChange={(e) => setForm({ ...form, notes: e.target.value })}
                       className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-gray-400 focus:ring-2 md:focus:ring-4 focus:ring-gray-100"
@@ -973,8 +1093,8 @@ const NutritionForm = () => {
                   {/* Desktop Meal Cards */}
                   <div className="hidden md:block space-y-4">
                     {paginatedData.map((item) => {
-                      const totalMacros = (parseInt(item.protein) || 0) + (parseInt(item.carbs) || 0) + (parseInt(item.fats) || 0);
-                      const proteinPercent = totalMacros > 0 ? Math.round(((parseInt(item.protein) || 0) / totalMacros) * 100) : 0;
+                      const totalMacros = (parseFloat(item.protein) || 0) + (parseFloat(item.carbs) || 0) + (parseFloat(item.fats) || 0);
+                      const proteinPercent = totalMacros > 0 ? Math.round(((parseFloat(item.protein) || 0) / totalMacros) * 100) : 0;
                       
                       return (
                         <div
@@ -1019,11 +1139,11 @@ const NutritionForm = () => {
                                       ></div>
                                       <div 
                                         className="bg-yellow-500"
-                                        style={{ width: `${Math.round(((parseInt(item.carbs) || 0) / totalMacros) * 100)}%` }}
+                                        style={{ width: `${Math.round(((parseFloat(item.carbs) || 0) / totalMacros) * 100)}%` }}
                                       ></div>
                                       <div 
                                         className="bg-purple-500"
-                                        style={{ width: `${Math.round(((parseInt(item.fats) || 0) / totalMacros) * 100)}%` }}
+                                        style={{ width: `${Math.round(((parseFloat(item.fats) || 0) / totalMacros) * 100)}%` }}
                                       ></div>
                                     </div>
                                   </div>
@@ -1185,6 +1305,111 @@ const NutritionForm = () => {
         </div>
       </div>
 
+      {/* Portion Selector Modal */}
+      {showPortionSelector && selectedFood && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-800">Select Portion Size</h3>
+              <button
+                onClick={() => {
+                  setShowPortionSelector(false);
+                  setSelectedFood(null);
+                  setPortionMultiplier(1);
+                }}
+                className="p-1 hover:bg-gray-100 rounded-lg"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-gray-600 mb-2">{selectedFood.name}</p>
+              <p className="text-sm text-gray-500">Standard serving: {selectedFood.servingSize}</p>
+            </div>
+            
+            <div className="grid grid-cols-4 gap-2 mb-4">
+              {[0.5, 1, 1.5, 2].map((mult) => (
+                <button
+                  key={mult}
+                  onClick={() => handlePortionChange(mult)}
+                  className={`py-2 rounded-lg transition-all ${
+                    portionMultiplier === mult
+                      ? 'bg-green-500 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {mult}x
+                </button>
+              ))}
+            </div>
+            
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Custom amount</label>
+              <input
+                type="number"
+                step="0.1"
+                value={portionMultiplier}
+                onChange={(e) => handlePortionChange(parseFloat(e.target.value) || 1)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                placeholder="Enter multiplier (e.g., 1.5)"
+              />
+            </div>
+            
+            <div className="bg-gray-50 p-3 rounded-lg mb-4">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Calories:</span>
+                <span className="font-bold">{form.calories} kcal</span>
+              </div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>Protein:</span>
+                <span>{form.protein}g</span>
+              </div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>Carbs:</span>
+                <span>{form.carbs}g</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Fats:</span>
+                <span>{form.fats}g</span>
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowPortionSelector(false);
+                  setSelectedFood(null);
+                  setPortionMultiplier(1);
+                }}
+                className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowPortionSelector(false);
+                  toast.success(`Added ${selectedFood.name} to meal!`, { icon: '🍽️' });
+                }}
+                className="flex-1 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:opacity-90 transition-all"
+              >
+                Add to Meal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Food Search Modal - Now with combined meal support */}
+      {showFoodSearch && (
+        <FoodSearch
+          onSelectFood={handleFoodSelect}
+          onSelectMultipleFoods={handleMultipleFoodSelect}
+          onClose={() => setShowFoodSearch(false)}
+          selectedFood={selectedFood}
+        />
+      )}
+
       {/* Mobile Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white/95 backdrop-blur-sm border-t border-gray-200 p-2 shadow-2xl">
         <div className="flex justify-around items-center">
@@ -1200,13 +1425,12 @@ const NutritionForm = () => {
           </button>
           <button 
             onClick={() => {
-              const randomMeal = quickMeals[Math.floor(Math.random() * quickMeals.length)];
-              applyQuickMeal(randomMeal);
+              setShowFoodSearch(true);
             }}
             className="flex flex-col items-center p-2 rounded-lg text-gray-600 hover:text-blue-600"
           >
-            <ChefHat className="h-5 w-5" />
-            <span className="text-xs mt-1">Quick</span>
+            <Search className="h-5 w-5" />
+            <span className="text-xs mt-1">Search</span>
           </button>
           <button 
             onClick={fetchNutrition}
@@ -1217,18 +1441,13 @@ const NutritionForm = () => {
           </button>
           <button 
             onClick={() => {
-              toast('🍎 Remember to drink water with your meals!', {
-                icon: '💧',
-                style: {
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  color: '#fff',
-                }
-              });
+              const randomMeal = quickMeals[Math.floor(Math.random() * quickMeals.length)];
+              applyQuickMeal(randomMeal);
             }}
-            className="flex flex-col items-center p-2 rounded-lg text-gray-600 hover:text-red-600"
+            className="flex flex-col items-center p-2 rounded-lg text-gray-600 hover:text-orange-600"
           >
-            <Apple className="h-5 w-5" />
-            <span className="text-xs mt-1">Tips</span>
+            <ChefHat className="h-5 w-5" />
+            <span className="text-xs mt-1">Quick</span>
           </button>
         </div>
       </div>
@@ -1256,11 +1475,11 @@ const NutritionForm = () => {
         /* Hide scrollbar but allow scrolling */
         .overflow-x-auto {
           -webkit-overflow-scrolling: touch;
-          scrollbar-width: none; /* Firefox */
+          scrollbar-width: none;
         }
         
         .overflow-x-auto::-webkit-scrollbar {
-          display: none; /* Chrome, Safari, Opera */
+          display: none;
         }
         
         /* Line clamp for text truncation */

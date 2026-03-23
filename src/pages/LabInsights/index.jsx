@@ -1,916 +1,32 @@
-// // // import React, { useState, useEffect } from 'react';
-// // // import { apiService } from '../../services/api';
-
-// // // const LabInsights = () => {
-// // //   const [weeklyReport, setWeeklyReport] = useState(null);
-// // //   const [loading, setLoading] = useState(false);
-
-// // //   const downloadWeeklyReport = async () => {
-// // //     setLoading(true);
-// // //     try {
-// // //       const blob = await apiService.getWeeklyReport();
-// // //       const url = window.URL.createObjectURL(blob);
-// // //       const a = document.createElement('a');
-// // //       a.style.display = 'none';
-// // //       a.href = url;
-// // //       a.download = 'mylab-weekly-report.pdf';
-// // //       document.body.appendChild(a);
-// // //       a.click();
-// // //       window.URL.revokeObjectURL(url);
-// // //       alert('Weekly report downloaded successfully!');
-// // //     } catch (error) {
-// // //       alert('No weekly report available yet. Continue tracking to generate insights.');
-// // //     } finally {
-// // //       setLoading(false);
-// // //     }
-// // //   };
-
-// // //   // Sample dashboard data
-// // //   const dashboardData = {
-// // //     overallHealth: 85,
-// // //     sleepQuality: 78,
-// // //     activityLevel: 92,
-// // //     nutritionScore: 81,
-// // //     moodTrend: 'improving',
-// // //     weeklyComparison: '+12%',
-// // //     insights: [
-// // //       'Your sleep consistency has improved by 15% this week',
-// // //       'Great job maintaining your exercise routine',
-// // //       'Consider increasing water intake based on activity levels',
-// // //       'Mood tracking shows positive trend - keep it up!'
-// // //     ],
-// // //     recommendations: [
-// // //       'Aim for 30 minutes of moderate activity daily',
-// // //       'Try to maintain consistent sleep schedule',
-// // //       'Include more leafy greens in your meals',
-// // //       'Practice mindfulness for stress management'
-// // //     ]
-// // //   };
-
-// // //   return (
-// // //     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8">
-// // //       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-// // //         <div className="text-center mb-8">
-// // //           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-// // //             Lab Insights
-// // //           </h1>
-// // //           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-// // //             Your personalized health dashboard with AI-powered insights and weekly reports
-// // //           </p>
-// // //         </div>
-
-// // //         {/* Download Report Section */}
-// // //         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-// // //           <div className="flex flex-col md:flex-row items-center justify-between">
-// // //             <div>
-// // //               <h2 className="text-2xl font-bold text-gray-800 mb-2">Weekly Health Report</h2>
-// // //               <p className="text-gray-600">Download your comprehensive weekly health analysis</p>
-// // //             </div>
-// // //             <button
-// // //               onClick={downloadWeeklyReport}
-// // //               disabled={loading}
-// // //               className="bg-gradient-to-r from-sky-blue to-light-pink text-white px-8 py-4 rounded-lg font-semibold hover-lift transition-all duration-300 disabled:opacity-50 mt-4 md:mt-0"
-// // //             >
-// // //               {loading ? 'Generating Report...' : 'Download Weekly Report'}
-// // //             </button>
-// // //           </div>
-// // //         </div>
-
-// // //         {/* Health Score Overview */}
-// // //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-// // //           {[
-// // //             { label: 'Overall Health', score: dashboardData.overallHealth, color: 'green' },
-// // //             { label: 'Sleep Quality', score: dashboardData.sleepQuality, color: 'blue' },
-// // //             { label: 'Activity Level', score: dashboardData.activityLevel, color: 'purple' },
-// // //             { label: 'Nutrition Score', score: dashboardData.nutritionScore, color: 'orange' }
-// // //           ].map((metric, index) => (
-// // //             <div key={index} className="bg-white rounded-2xl shadow-lg p-6 text-center">
-// // //               <div className={`text-2xl font-bold text-${metric.color}-600 mb-2`}>
-// // //                 {metric.score}%
-// // //               </div>
-// // //               <div className="text-gray-600">{metric.label}</div>
-// // //               <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-// // //                 <div 
-// // //                   className={`bg-${metric.color}-500 h-2 rounded-full`}
-// // //                   style={{ width: `${metric.score}%` }}
-// // //                 ></div>
-// // //               </div>
-// // //             </div>
-// // //           ))}
-// // //         </div>
-
-// // //         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-// // //           {/* AI Insights */}
-// // //           <div className="bg-white rounded-2xl shadow-lg p-6">
-// // //             <h2 className="text-2xl font-bold text-gray-800 mb-6">AI-Powered Insights</h2>
-// // //             <div className="space-y-4">
-// // //               {dashboardData.insights.map((insight, index) => (
-// // //                 <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg">
-// // //                   <span className="text-blue-500 text-lg">💡</span>
-// // //                   <p className="text-gray-700">{insight}</p>
-// // //                 </div>
-// // //               ))}
-// // //             </div>
-
-// // //             <div className="mt-6 p-4 bg-green-50 rounded-lg border-2 border-green-200">
-// // //               <div className="flex items-center space-x-3">
-// // //                 <span className="text-green-500 text-xl">📈</span>
-// // //                 <div>
-// // //                   <h3 className="font-semibold text-green-800">Weekly Progress</h3>
-// // //                   <p className="text-green-700">Your health metrics improved by {dashboardData.weeklyComparison} this week!</p>
-// // //                 </div>
-// // //               </div>
-// // //             </div>
-// // //           </div>
-
-// // //           {/* Personalized Recommendations */}
-// // //           <div className="bg-white rounded-2xl shadow-lg p-6">
-// // //             <h2 className="text-2xl font-bold text-gray-800 mb-6">Personalized Recommendations</h2>
-// // //             <div className="space-y-4">
-// // //               {dashboardData.recommendations.map((recommendation, index) => (
-// // //                 <div key={index} className="flex items-start space-x-3 p-4 bg-purple-50 rounded-lg">
-// // //                   <span className="text-purple-500 text-lg">⭐</span>
-// // //                   <p className="text-gray-700">{recommendation}</p>
-// // //                 </div>
-// // //               ))}
-// // //             </div>
-
-// // //             <div className="mt-6 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-200">
-// // //               <h3 className="font-semibold text-yellow-800 mb-2">Mood Trend Analysis</h3>
-// // //               <p className="text-yellow-700">
-// // //                 Your mood tracking shows an {dashboardData.moodTrend} trend. 
-// // //                 {dashboardData.moodTrend === 'improving' 
-// // //                   ? ' Continue your current self-care practices!' 
-// // //                   : ' Consider trying some relaxation techniques.'}
-// // //               </p>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-
-// // //         {/* Data Visualization Placeholder */}
-// // //         <div className="bg-white rounded-2xl shadow-lg p-6 mt-8">
-// // //           <h2 className="text-2xl font-bold text-gray-800 mb-6">Health Trends</h2>
-// // //           <div className="bg-gray-100 rounded-lg p-8 text-center">
-// // //             <p className="text-gray-500 mb-4">Interactive charts and graphs will appear here</p>
-// // //             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-// // //               <div className="bg-blue-200 h-32 rounded-lg flex items-center justify-center">
-// // //                 <span className="text-blue-700">Sleep Pattern Chart</span>
-// // //               </div>
-// // //               <div className="bg-green-200 h-32 rounded-lg flex items-center justify-center">
-// // //                 <span className="text-green-700">Activity Timeline</span>
-// // //               </div>
-// // //               <div className="bg-purple-200 h-32 rounded-lg flex items-center justify-center">
-// // //                 <span className="text-purple-700">Mood Correlation</span>
-// // //               </div>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-// // //       </div>
-// // //     </div>
-// // //   );
-// // // };
-
-// // // export default LabInsights;
-// // import React, { useState, useEffect } from 'react';
-// // import {
-// //   BarChart3,
-// //   Download,
-// //   FileText,
-// //   Moon,
-// //   Dumbbell,
-// //   Heart,
-// //   Users,
-// //   Brain,
-// //   Clock,
-// //   Activity,
-// //   TrendingUp,
-// //   Calendar,
-// //   User,
-// //   RefreshCw,
-// //   AlertCircle
-// // } from 'lucide-react';
-// // import { LabInsightsAPI } from '../';
-// // import {
-// //   Chart as ChartJS,
-// //   CategoryScale,
-// //   LinearScale,
-// //   BarElement,
-// //   Title,
-// //   Tooltip,
-// //   Legend,
-// //   ArcElement,
-// //   PointElement,
-// //   LineElement
-// // } from 'chart.js';
-// // import { Bar, Doughnut, Line } from 'react-chartjs-2';
-
-// // // Register ChartJS components
-// // ChartJS.register(
-// //   CategoryScale,
-// //   LinearScale,
-// //   BarElement,
-// //   Title,
-// //   Tooltip,
-// //   Legend,
-// //   ArcElement,
-// //   PointElement,
-// //   LineElement
-// // );
-
-// // const Dashboard = () => {
-// //   const [dashboardData, setDashboardData] = useState(null);
-// //   const [loading, setLoading] = useState(true);
-// //   const [generatingReport, setGeneratingReport] = useState(false);
-// //   const [activeTab, setActiveTab] = useState('weekly');
-// //   const [insights, setInsights] = useState([]);
-// //   const [stats, setStats] = useState(null);
-// //   const [error, setError] = useState(null);
-
-// //   const api = new LabInsightsAPI();
-
-// //   const colors = {
-// //     background: '#F4F1E9',
-// //     primary: '#B1D182',
-// //     text: '#0B132B',
-// //     accent: '#688F48',
-// //     lightAccent: '#E8F4D9',
-// //     darkAccent: '#4A6B33',
-// //     card: '#FFFFFF',
-// //     success: '#4CAF50',
-// //     warning: '#FF9800',
-// //     error: '#F44336',
-// //     info: '#2196F3'
-// //   };
-
-// //   useEffect(() => {
-// //     fetchDashboardData();
-// //     fetchRecentInsights();
-// //     fetchActivityStats();
-// //   }, []);
-
-// //   const fetchDashboardData = async () => {
-// //     try {
-// //       setLoading(true);
-// //       const data = await api.getDashboardInsights();
-// //       setDashboardData(data);
-// //       setError(null);
-// //     } catch (err) {
-// //       setError('Failed to load dashboard data');
-// //       console.error(err);
-// //     } finally {
-// //       setLoading(false);
-// //     }
-// //   };
-
-// //   const fetchRecentInsights = async () => {
-// //     try {
-// //       const data = await api.fetchInsights();
-// //       setInsights(data.slice(0, 5));
-// //     } catch (err) {
-// //       console.error('Failed to fetch insights:', err);
-// //     }
-// //   };
-
-// //   const fetchActivityStats = async () => {
-// //     try {
-// //       // You might want to create a separate endpoint for this
-// //       const response = await api.client.get('/labinsights/lab/activity-stats');
-// //       setStats(response.data);
-// //     } catch (err) {
-// //       console.error('Failed to fetch activity stats:', err);
-// //     }
-// //   };
-
-// //   const handleGenerateReport = async () => {
-// //     try {
-// //       setGeneratingReport(true);
-// //       const response = await api.generateWeeklyReport();
-      
-// //       if (response.success) {
-// //         // Trigger download
-// //         const downloadResponse = await api.downloadWeeklyReport(response.downloadUrl.split('/').pop());
-        
-// //         // Create blob and download
-// //         const blob = new Blob([downloadResponse], { type: 'application/pdf' });
-// //         const url = window.URL.createObjectURL(blob);
-// //         const link = document.createElement('a');
-// //         link.href = url;
-// //         link.download = response.downloadUrl.split('/').pop() || 'weekly-report.pdf';
-// //         document.body.appendChild(link);
-// //         link.click();
-// //         document.body.removeChild(link);
-// //         window.URL.revokeObjectURL(url);
-// //       }
-// //     } catch (err) {
-// //       setError('Failed to generate report');
-// //       console.error(err);
-// //     } finally {
-// //       setGeneratingReport(false);
-// //     }
-// //   };
-
-// //   const handleRefresh = () => {
-// //     fetchDashboardData();
-// //     fetchRecentInsights();
-// //     fetchActivityStats();
-// //   };
-
-// //   const handleGenerateInsight = async (category) => {
-// //     try {
-// //       setLoading(true);
-// //       const response = await api.client.post('/labinsights/lab/collect-real-data', { category });
-      
-// //       if (response.data.success) {
-// //         fetchDashboardData();
-// //         fetchRecentInsights();
-// //       }
-// //     } catch (err) {
-// //       setError(`Failed to generate ${category} insight`);
-// //       console.error(err);
-// //     } finally {
-// //       setLoading(false);
-// //     }
-// //   };
-
-// //   const formatDate = (dateString) => {
-// //     return new Date(dateString).toLocaleDateString('en-US', {
-// //       month: 'short',
-// //       day: 'numeric',
-// //       year: 'numeric'
-// //     });
-// //   };
-
-// //   const getCategoryIcon = (category) => {
-// //     switch(category.toLowerCase()) {
-// //       case 'sleeprecovery':
-// //         return <Moon className="w-5 h-5" />;
-// //       case 'fitness':
-// //         return <Dumbbell className="w-5 h-5" />;
-// //       case 'nutrition':
-// //         return <Heart className="w-5 h-5" />;
-// //       case 'selfcare':
-// //         return <Brain className="w-5 h-5" />;
-// //       case 'community':
-// //         return <Users className="w-5 h-5" />;
-// //       default:
-// //         return <Activity className="w-5 h-5" />;
-// //     }
-// //   };
-
-// //   const getCategoryColor = (category) => {
-// //     switch(category.toLowerCase()) {
-// //       case 'sleeprecovery':
-// //         return colors.info;
-// //       case 'fitness':
-// //         return colors.success;
-// //       case 'nutrition':
-// //         return colors.warning;
-// //       case 'selfcare':
-// //         return colors.accent;
-// //       case 'community':
-// //         return colors.primary;
-// //       default:
-// //         return colors.text;
-// //     }
-// //   };
-
-// //   // Prepare chart data
-// //   const weeklyChartData = dashboardData?.weeklySummary ? {
-// //     labels: ['Sleep', 'Workouts', 'Self-Care', 'Community'],
-// //     datasets: [
-// //       {
-// //         label: 'Weekly Activity',
-// //         data: [
-// //           dashboardData.weeklySummary.totalSleepHours,
-// //           dashboardData.weeklySummary.totalWorkouts,
-// //           dashboardData.weeklySummary.totalSelfCare,
-// //           dashboardData.weeklySummary.totalPosts
-// //         ],
-// //         backgroundColor: [
-// //           colors.info,
-// //           colors.success,
-// //           colors.accent,
-// //           colors.primary
-// //         ],
-// //         borderColor: [
-// //           colors.info,
-// //           colors.success,
-// //           colors.accent,
-// //           colors.primary
-// //         ],
-// //         borderWidth: 1
-// //       }
-// //     ]
-// //   } : null;
-
-// //   const sleepQualityChartData = {
-// //     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-// //     datasets: [
-// //       {
-// //         label: 'Sleep Quality',
-// //         data: [8, 7, 6, 8, 9, 7, 8],
-// //         borderColor: colors.info,
-// //         backgroundColor: `${colors.info}20`,
-// //         tension: 0.4
-// //       }
-// //     ]
-// //   };
-
-// //   const activityChartData = {
-// //     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-// //     datasets: [
-// //       {
-// //         label: 'Workouts',
-// //         data: [12, 19, 15, 25, 22, 30],
-// //         backgroundColor: colors.success,
-// //       },
-// //       {
-// //         label: 'Self-Care',
-// //         data: [8, 15, 12, 18, 16, 20],
-// //         backgroundColor: colors.accent,
-// //       }
-// //     ]
-// //   };
-
-// //   const chartOptions = {
-// //     responsive: true,
-// //     maintainAspectRatio: false,
-// //     plugins: {
-// //       legend: {
-// //         position: 'top',
-// //         labels: {
-// //           color: colors.text,
-// //           font: {
-// //             size: 12
-// //           }
-// //         }
-// //       }
-// //     },
-// //     scales: {
-// //       y: {
-// //         beginAtZero: true,
-// //         grid: {
-// //           color: `${colors.text}20`
-// //         },
-// //         ticks: {
-// //           color: colors.text
-// //         }
-// //       },
-// //       x: {
-// //         grid: {
-// //           color: `${colors.text}20`
-// //         },
-// //         ticks: {
-// //           color: colors.text
-// //         }
-// //       }
-// //     }
-// //   };
-
-// //   if (loading && !dashboardData) {
-// //     return (
-// //       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
-// //         <div className="text-center">
-// //           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: colors.accent }}></div>
-// //           <p style={{ color: colors.text }}>Loading your wellness dashboard...</p>
-// //         </div>
-// //       </div>
-// //     );
-// //   }
-
-// //   return (
-// //     <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: colors.background }}>
-// //       {/* Header */}
-// //       <div className="mb-6">
-// //         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-// //           <div>
-// //             <h1 className="text-2xl md:text-3xl font-bold" style={{ color: colors.text }}>Wellness Dashboard</h1>
-// //             <p className="mt-1" style={{ color: colors.text + 'CC' }}>
-// //               Track your health insights and weekly progress
-// //             </p>
-// //           </div>
-          
-// //           <div className="flex items-center gap-3">
-// //             <button
-// //               onClick={handleRefresh}
-// //               className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
-// //               style={{ 
-// //                 backgroundColor: colors.lightAccent,
-// //                 color: colors.darkAccent
-// //               }}
-// //               disabled={loading}
-// //             >
-// //               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-// //               Refresh
-// //             </button>
-            
-// //             <button
-// //               onClick={handleGenerateReport}
-// //               disabled={generatingReport}
-// //               className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors"
-// //               style={{ 
-// //                 backgroundColor: colors.accent,
-// //                 color: '#FFFFFF'
-// //               }}
-// //             >
-// //               {generatingReport ? (
-// //                 <>
-// //                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-// //                   Generating...
-// //                 </>
-// //               ) : (
-// //                 <>
-// //                   <FileText className="w-4 h-4" />
-// //                   Generate Report
-// //                 </>
-// //               )}
-// //             </button>
-// //           </div>
-// //         </div>
-        
-// //         {/* Tabs */}
-// //         <div className="flex gap-2 mt-6 border-b" style={{ borderColor: colors.text + '20' }}>
-// //           <button
-// //             onClick={() => setActiveTab('weekly')}
-// //             className={`px-4 py-2 font-medium ${activeTab === 'weekly' ? 'border-b-2' : ''}`}
-// //             style={{
-// //               color: activeTab === 'weekly' ? colors.accent : colors.text + 'CC',
-// //               borderColor: activeTab === 'weekly' ? colors.accent : 'transparent'
-// //             }}
-// //           >
-// //             <div className="flex items-center gap-2">
-// //               <Calendar className="w-4 h-4" />
-// //               Weekly Overview
-// //             </div>
-// //           </button>
-// //           <button
-// //             onClick={() => setActiveTab('insights')}
-// //             className={`px-4 py-2 font-medium ${activeTab === 'insights' ? 'border-b-2' : ''}`}
-// //             style={{
-// //               color: activeTab === 'insights' ? colors.accent : colors.text + 'CC',
-// //               borderColor: activeTab === 'insights' ? colors.accent : 'transparent'
-// //             }}
-// //           >
-// //             <div className="flex items-center gap-2">
-// //               <Brain className="w-4 h-4" />
-// //               AI Insights
-// //             </div>
-// //           </button>
-// //           <button
-// //             onClick={() => setActiveTab('activity')}
-// //             className={`px-4 py-2 font-medium ${activeTab === 'activity' ? 'border-b-2' : ''}`}
-// //             style={{
-// //               color: activeTab === 'activity' ? colors.accent : colors.text + 'CC',
-// //               borderColor: activeTab === 'activity' ? colors.accent : 'transparent'
-// //             }}
-// //           >
-// //             <div className="flex items-center gap-2">
-// //               <Activity className="w-4 h-4" />
-// //               Activity Log
-// //             </div>
-// //           </button>
-// //         </div>
-// //       </div>
-
-// //       {/* Error Message */}
-// //       {error && (
-// //         <div className="mb-6 p-4 rounded-lg flex items-start gap-3" style={{ backgroundColor: `${colors.error}20`, borderLeft: `4px solid ${colors.error}` }}>
-// //           <AlertCircle className="w-5 h-5 mt-0.5" style={{ color: colors.error }} />
-// //           <div>
-// //             <p className="font-medium" style={{ color: colors.error }}>Error</p>
-// //             <p style={{ color: colors.text }}>{error}</p>
-// //           </div>
-// //         </div>
-// //       )}
-
-// //       {/* Weekly Overview Tab */}
-// //       {activeTab === 'weekly' && dashboardData && (
-// //         <>
-// //           {/* Summary Cards */}
-// //           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-// //             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center justify-between">
-// //                 <div>
-// //                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Sleep Hours</p>
-// //                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-// //                     {dashboardData.weeklySummary.totalSleepHours.toFixed(1)}h
-// //                   </p>
-// //                   <p className="text-sm mt-1" style={{ color: colors.accent }}>
-// //                     Quality: {dashboardData.weeklySummary.avgSleepQuality}/10
-// //                   </p>
-// //                 </div>
-// //                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.info}20` }}>
-// //                   <Moon className="w-6 h-6" style={{ color: colors.info }} />
-// //                 </div>
-// //               </div>
-// //             </div>
-
-// //             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center justify-between">
-// //                 <div>
-// //                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Workouts</p>
-// //                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-// //                     {dashboardData.weeklySummary.totalWorkouts}
-// //                   </p>
-// //                   <p className="text-sm mt-1" style={{ color: colors.success }}>
-// //                     ~{dashboardData.weeklySummary.avgCaloriesBurned} calories
-// //                   </p>
-// //                 </div>
-// //                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.success}20` }}>
-// //                   <Dumbbell className="w-6 h-6" style={{ color: colors.success }} />
-// //                 </div>
-// //               </div>
-// //             </div>
-
-// //             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center justify-between">
-// //                 <div>
-// //                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Self-Care</p>
-// //                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-// //                     {dashboardData.weeklySummary.totalSelfCare}
-// //                   </p>
-// //                   <p className="text-sm mt-1" style={{ color: colors.accent }}>
-// //                     Activities completed
-// //                   </p>
-// //                 </div>
-// //                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.accent}20` }}>
-// //                   <Brain className="w-6 h-6" style={{ color: colors.accent }} />
-// //                 </div>
-// //               </div>
-// //             </div>
-
-// //             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center justify-between">
-// //                 <div>
-// //                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Community</p>
-// //                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-// //                     {dashboardData.weeklySummary.totalPosts}
-// //                   </p>
-// //                   <p className="text-sm mt-1" style={{ color: colors.primary }}>
-// //                     Posts & interactions
-// //                   </p>
-// //                 </div>
-// //                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.primary}20` }}>
-// //                   <Users className="w-6 h-6" style={{ color: colors.primary }} />
-// //                 </div>
-// //               </div>
-// //             </div>
-// //           </div>
-
-// //           {/* Charts */}
-// //           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-// //             {/* Weekly Activity Chart */}
-// //             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center justify-between mb-4">
-// //                 <h3 className="font-bold" style={{ color: colors.text }}>Weekly Activity Summary</h3>
-// //                 <BarChart3 className="w-5 h-5" style={{ color: colors.text + '80' }} />
-// //               </div>
-// //               <div className="h-64">
-// //                 {weeklyChartData && (
-// //                   <Bar data={weeklyChartData} options={chartOptions} />
-// //                 )}
-// //               </div>
-// //             </div>
-
-// //             {/* Sleep Quality Chart */}
-// //             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center justify-between mb-4">
-// //                 <h3 className="font-bold" style={{ color: colors.text }}>Sleep Quality Trend</h3>
-// //                 <TrendingUp className="w-5 h-5" style={{ color: colors.text + '80' }} />
-// //               </div>
-// //               <div className="h-64">
-// //                 <Line data={sleepQualityChartData} options={chartOptions} />
-// //               </div>
-// //             </div>
-// //           </div>
-
-// //           {/* AI Summary */}
-// //           {dashboardData.aiSummary && (
-// //             <div className="mb-6 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //               <div className="flex items-center gap-3 mb-3">
-// //                 <div className="p-2 rounded-full" style={{ backgroundColor: `${colors.accent}20` }}>
-// //                   <Brain className="w-5 h-5" style={{ color: colors.accent }} />
-// //                 </div>
-// //                 <h3 className="font-bold" style={{ color: colors.text }}>AI Wellness Summary</h3>
-// //               </div>
-// //               <p style={{ color: colors.text }}>
-// //                 {dashboardData.aiSummary}
-// //               </p>
-// //             </div>
-// //           )}
-// //         </>
-// //       )}
-
-// //       {/* Insights Tab */}
-// //       {activeTab === 'insights' && (
-// //         <div className="space-y-6">
-// //           {/* Generate New Insights */}
-// //           <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Generate New Insights</h3>
-// //             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-// //               {['sleepRecovery', 'fitness', 'nutrition', 'selfCare', 'community'].map((category) => (
-// //                 <button
-// //                   key={category}
-// //                   onClick={() => handleGenerateInsight(category)}
-// //                   disabled={loading}
-// //                   className="p-3 rounded-lg text-center transition-all hover:scale-105 disabled:opacity-50"
-// //                   style={{ 
-// //                     backgroundColor: getCategoryColor(category) + '20',
-// //                     color: getCategoryColor(category)
-// //                   }}
-// //                 >
-// //                   <div className="flex flex-col items-center gap-2">
-// //                     {getCategoryIcon(category)}
-// //                     <span className="text-sm font-medium capitalize">
-// //                       {category === 'sleepRecovery' ? 'Sleep' : category}
-// //                     </span>
-// //                   </div>
-// //                 </button>
-// //               ))}
-// //             </div>
-// //           </div>
-
-// //           {/* Recent Insights */}
-// //           <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Recent Insights</h3>
-// //             <div className="space-y-4">
-// //               {insights.length > 0 ? (
-// //                 insights.map((insight) => (
-// //                   <div
-// //                     key={insight._id}
-// //                     className="p-4 rounded-lg border"
-// //                     style={{ 
-// //                       backgroundColor: colors.background,
-// //                       borderColor: getCategoryColor(insight.category) + '40'
-// //                     }}
-// //                   >
-// //                     <div className="flex items-start justify-between">
-// //                       <div className="flex items-center gap-3">
-// //                         <div
-// //                           className="p-2 rounded-full"
-// //                           style={{ backgroundColor: getCategoryColor(insight.category) + '20' }}
-// //                         >
-// //                           {getCategoryIcon(insight.category)}
-// //                         </div>
-// //                         <div>
-// //                           <h4 className="font-bold capitalize" style={{ color: colors.text }}>
-// //                             {insight.category === 'sleepRecovery' ? 'Sleep Recovery' : insight.category}
-// //                           </h4>
-// //                           <p className="text-sm mt-1" style={{ color: colors.text + 'CC' }}>
-// //                             {insight.summary}
-// //                           </p>
-// //                         </div>
-// //                       </div>
-// //                       <span className="text-sm" style={{ color: colors.text + '80' }}>
-// //                         {formatDate(insight.createdAt)}
-// //                       </span>
-// //                     </div>
-                    
-// //                     {insight.aiGeneratedTips && insight.aiGeneratedTips.length > 0 && (
-// //                       <div className="mt-3 pt-3 border-t" style={{ borderColor: getCategoryColor(insight.category) + '20' }}>
-// //                         <p className="text-sm font-medium mb-2" style={{ color: colors.text }}>
-// //                           AI Recommendations:
-// //                         </p>
-// //                         <ul className="space-y-1">
-// //                           {insight.aiGeneratedTips.map((tip, index) => (
-// //                             <li key={index} className="text-sm flex items-start gap-2" style={{ color: colors.text + 'CC' }}>
-// //                               <span className="mt-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getCategoryColor(insight.category) }}></span>
-// //                               {tip}
-// //                             </li>
-// //                           ))}
-// //                         </ul>
-// //                       </div>
-// //                     )}
-// //                   </div>
-// //                 ))
-// //               ) : (
-// //                 <div className="text-center py-8" style={{ color: colors.text + '80' }}>
-// //                   <Brain className="w-12 h-12 mx-auto mb-3 opacity-50" />
-// //                   <p>No insights generated yet. Generate your first insight above!</p>
-// //                 </div>
-// //               )}
-// //             </div>
-// //           </div>
-// //         </div>
-// //       )}
-
-// //       {/* Activity Tab */}
-// //       {activeTab === 'activity' && (
-// //         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-// //           {/* Activity Stats */}
-// //           <div className="lg:col-span-2 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Activity Overview</h3>
-// //             <div className="h-80">
-// //               <Bar data={activityChartData} options={chartOptions} />
-// //             </div>
-// //           </div>
-
-// //           {/* Quick Stats */}
-// //           <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Quick Stats</h3>
-// //             <div className="space-y-4">
-// //               {stats ? (
-// //                 <>
-// //                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-// //                     <div className="flex items-center gap-3">
-// //                       <Moon className="w-4 h-4" style={{ color: colors.info }} />
-// //                       <span style={{ color: colors.text }}>Sleep Records</span>
-// //                     </div>
-// //                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.sleep || 0}</span>
-// //                   </div>
-// //                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-// //                     <div className="flex items-center gap-3">
-// //                       <Dumbbell className="w-4 h-4" style={{ color: colors.success }} />
-// //                       <span style={{ color: colors.text }}>Workout Sessions</span>
-// //                     </div>
-// //                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.fitness || 0}</span>
-// //                   </div>
-// //                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-// //                     <div className="flex items-center gap-3">
-// //                       <Brain className="w-4 h-4" style={{ color: colors.accent }} />
-// //                       <span style={{ color: colors.text }}>Self-Care Activities</span>
-// //                     </div>
-// //                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.selfCare || 0}</span>
-// //                   </div>
-// //                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-// //                     <div className="flex items-center gap-3">
-// //                       <Users className="w-4 h-4" style={{ color: colors.primary }} />
-// //                       <span style={{ color: colors.text }}>Community Posts</span>
-// //                     </div>
-// //                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.community || 0}</span>
-// //                   </div>
-// //                 </>
-// //               ) : (
-// //                 <div className="text-center py-8" style={{ color: colors.text + '80' }}>
-// //                   <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
-// //                   <p>Loading activity stats...</p>
-// //                 </div>
-// //               )}
-// //             </div>
-// //           </div>
-
-// //           {/* Report History */}
-// //           <div className="lg:col-span-3 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-// //             <div className="flex items-center justify-between mb-4">
-// //               <h3 className="font-bold" style={{ color: colors.text }}>Recent Reports</h3>
-// //               <button
-// //                 onClick={handleGenerateReport}
-// //                 disabled={generatingReport}
-// //                 className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg"
-// //                 style={{ 
-// //                   backgroundColor: colors.lightAccent,
-// //                   color: colors.darkAccent
-// //                 }}
-// //               >
-// //                 <FileText className="w-4 h-4" />
-// //                 New Report
-// //               </button>
-// //             </div>
-// //             <div className="space-y-3">
-// //               <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-// //                 <div className="flex items-center gap-3">
-// //                   <FileText className="w-4 h-4" style={{ color: colors.accent }} />
-// //                   <div>
-// //                     <p style={{ color: colors.text }}>Weekly Health Report</p>
-// //                     <p className="text-sm" style={{ color: colors.text + '80' }}>
-// //                       Generated {new Date().toLocaleDateString()}
-// //                     </p>
-// //                   </div>
-// //                 </div>
-// //                 <button className="p-1.5 rounded" style={{ backgroundColor: colors.lightAccent }}>
-// //                   <Download className="w-4 h-4" style={{ color: colors.darkAccent }} />
-// //                 </button>
-// //               </div>
-// //             </div>
-// //           </div>
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default Dashboard;
-
-
 // import React, { useState, useEffect } from 'react';
+// import { motion } from 'framer-motion';
+// import { useNavigate } from 'react-router-dom';
+// import toast, { Toaster } from 'react-hot-toast';
 // import {
-//   BarChart3,
-//   Download,
-//   FileText,
-//   Moon,
-//   Dumbbell,
+//   Apple,
+//   Flame,
 //   Heart,
+//   Moon, 
+//   Dumbbell,
 //   Users,
 //   Brain,
-//   Clock,
-//   Activity,
-//   TrendingUp,
 //   Calendar,
-//   User,
-//   RefreshCw,
-//   AlertCircle
+//   TrendingUp,
+//   Activity,
+//   Droplets,
+//   Shield,
+//   UtensilsCrossed,
+//   MessageCircle,
+//   Clock,
+//   AlertCircle,
+//   BarChart3,
+//   Download,
+//   CheckCircle,
+//   XCircle,
+//   Baby,
+//   Stethoscope
 // } from 'lucide-react';
-// import { apiService } from '../../services/api'; // Import the unified apiService
+// import { apiService } from '../../services/api';
 // import {
 //   Chart as ChartJS,
 //   CategoryScale,
@@ -921,9 +37,10 @@
 //   Legend,
 //   ArcElement,
 //   PointElement,
-//   LineElement
+//   LineElement,
+//   Filler
 // } from 'chart.js';
-// import { Bar, Doughnut, Line } from 'react-chartjs-2';
+// import { Line, Doughnut } from 'react-chartjs-2';
 
 // // Register ChartJS components
 // ChartJS.register(
@@ -935,17 +52,132 @@
 //   Legend,
 //   ArcElement,
 //   PointElement,
-//   LineElement
+//   LineElement,
+//   Filler
 // );
 
-// const LabInsightsDashboard = () => {
-//   const [dashboardData, setDashboardData] = useState(null);
+// // Custom Toast Components
+// const SuccessToast = ({ message, description }) => (
+//   <div className="bg-white/95 backdrop-blur-lg rounded-xl p-4 shadow-2xl border border-green-200 flex items-center gap-3 min-w-[280px]">
+//     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center flex-shrink-0">
+//       <CheckCircle className="w-5 h-5 text-white" />
+//     </div>
+//     <div>
+//       <p className="font-bold text-gray-800 text-sm">{message}</p>
+//       <p className="text-xs text-gray-600">{description}</p>
+//     </div>
+//   </div>
+// );
+
+// const ErrorToast = ({ message, description }) => (
+//   <div className="bg-white/95 backdrop-blur-lg rounded-xl p-4 shadow-2xl border border-red-200 flex items-center gap-3 min-w-[280px]">
+//     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-400 to-red-500 flex items-center justify-center flex-shrink-0">
+//       <XCircle className="w-5 h-5 text-white" />
+//     </div>
+//     <div>
+//       <p className="font-bold text-gray-800 text-sm">{message}</p>
+//       <p className="text-xs text-gray-600">{description}</p>
+//     </div>
+//   </div>
+// );
+
+// // Helper function to calculate sleep duration from start and end times
+// const calculateSleepDuration = (sleepStart, sleepEnd) => {
+//   if (!sleepStart || !sleepEnd) return 0;
+//   try {
+//     const start = new Date(`2000-01-01T${sleepStart}`);
+//     const end = new Date(`2000-01-01T${sleepEnd}`);
+//     let diff = (end - start) / (1000 * 60 * 60);
+//     if (diff < 0) diff += 24;
+//     return diff;
+//   } catch {
+//     return 0;
+//   }
+// };
+
+// const LabInsights = () => {
+//   const navigate = useNavigate();
 //   const [loading, setLoading] = useState(true);
 //   const [generatingReport, setGeneratingReport] = useState(false);
-//   const [activeTab, setActiveTab] = useState('weekly');
-//   const [insights, setInsights] = useState([]);
-//   const [stats, setStats] = useState(null);
-//   const [error, setError] = useState(null);
+//   const [user, setUser] = useState(null);
+//   const [userId, setUserId] = useState(null);
+//   const [dashboardData, setDashboardData] = useState({
+//     femaleHealth: {
+//       hasData: false,
+//       lastCycle: null,
+//       cycleLength: 28,
+//       nextCycle: null,
+//       ovulationWindow: null,
+//       pregnancy: {
+//         hasData: false,
+//         isPregnant: false,
+//         dueDate: null,
+//         trimester: null,
+//         weeksPregnant: 0,
+//         startDate: null,
+//         conceptionDate: null
+//       }
+//     },
+//     menHealth: {
+//       hasData: false,
+//       lastCheckup: null,
+//       healthStatus: 'Good',
+//       averageStress: 0,
+//       averageEnergy: 0,
+//       averageSleep: 0,
+//       workoutDays: 0,
+//       recentMoods: [],
+//       healthScore: 0
+//     },
+//     sleep: {
+//       records: [],
+//       avgHours: 0,
+//       avgQuality: 0,
+//       totalHours: 0
+//     },
+//     fitness: {
+//       records: [],
+//       totalWorkouts: 0,
+//       totalDuration: 0,
+//       totalCalories: 0
+//     },
+//     nutrition: {
+//       records: [],
+//       totalCalories: 0,
+//       avgCalories: 0,
+//       totalProtein: 0,
+//       totalCarbs: 0,
+//       totalFats: 0
+//     },
+//     wellness: {
+//       activities: [],
+//       totalActivities: 0,
+//       moodScores: []
+//     },
+//     community: {
+//       posts: [],
+//       totalPosts: 0,
+//       totalLikes: 0,
+//       totalComments: 0
+//     },
+//     recentActivity: []
+//   });
+
+//   const [weeklyStats, setWeeklyStats] = useState({
+//     workouts: 0,
+//     caloriesBurned: 0,
+//     sleepHours: 0,
+//     sleepQuality: 0,
+//     caloriesEaten: 0,
+//     proteinEaten: 0,
+//     communityPosts: 0
+//   });
+
+//   const [trends, setTrends] = useState({
+//     sleep: [],
+//     calories: [],
+//     workouts: []
+//   });
 
 //   const colors = {
 //     background: '#F4F1E9',
@@ -953,245 +185,709 @@
 //     text: '#0B132B',
 //     accent: '#688F48',
 //     lightAccent: '#E8F4D9',
-//     darkAccent: '#4A6B33',
 //     card: '#FFFFFF',
-//     success: '#4CAF50',
-//     warning: '#FF9800',
-//     error: '#F44336',
-//     info: '#2196F3'
+//     female: '#EF4444',
+//     male: '#3B82F6',
+//     sleep: '#8B5CF6',
+//     fitness: '#10B981',
+//     nutrition: '#F59E0B',
+//     wellness: '#EC4899',
+//     community: '#6366F1',
+//     pregnancy: '#EC4899'
 //   };
 
+//   // Get user from localStorage
 //   useEffect(() => {
-//     fetchDashboardData();
-//     fetchRecentInsights();
-//     fetchActivityStats();
+//     const userData = localStorage.getItem('user');
+//     if (userData) {
+//       try {
+//         const parsedUser = JSON.parse(userData);
+//         setUser(parsedUser);
+//         setUserId(parsedUser._id || parsedUser.id);
+//         console.log('✅ User loaded:', parsedUser.name);
+//       } catch (e) {
+//         console.error('Error parsing user:', e);
+//       }
+//     }
 //   }, []);
 
-//   const fetchDashboardData = async () => {
+//   useEffect(() => {
+//     if (userId) {
+//       fetchAllData();
+//     }
+//   }, [userId]);
+
+//   const fetchAllData = async () => {
+//     if (!userId) {
+//       console.log('No user ID found');
+//       setLoading(false);
+//       return;
+//     }
+    
+//     setLoading(true);
 //     try {
-//       setLoading(true);
-//       const data = await apiService.getDashboardInsights();
-//       setDashboardData(data);
-//       setError(null);
-//     } catch (err) {
-//       setError('Failed to load dashboard data');
-//       console.error(err);
+//       console.log('📡 Fetching dashboard data for user:', userId);
+
+//       // Fetch all data in parallel with proper error handling
+//       const [
+//         cycles,
+//         sleepRecords,
+//         fitnessRecords,
+//         nutritionRecords,
+//         wellnessActivities,
+//         communityPosts,
+//         menHealthRecords,
+//         pregnancyRecords
+//       ] = await Promise.allSettled([
+//         apiService.getCycles(userId).catch(() => null),
+//         apiService.getSleepHistory().catch(() => []),
+//         apiService.getAllFitness().catch(() => []),
+//         apiService.getAllNutrition().catch(() => []),
+//         apiService.fetchAllSelfCareActivities().catch(() => []),
+//         apiService.getCommunityPosts().catch(() => ({ data: [] })),
+//         apiService.listRecordsHandler().catch(() => []),
+//         apiService.getPregnancy(userId).catch(() => null)
+//       ]);
+
+//       console.log('📊 Data fetched:', {
+//         cycles: cycles.status,
+//         sleep: sleepRecords.status,
+//         fitness: fitnessRecords.status,
+//         nutrition: nutritionRecords.status,
+//         wellness: wellnessActivities.status,
+//         community: communityPosts.status,
+//         menHealth: menHealthRecords.status,
+//         pregnancy: pregnancyRecords.status
+//       });
+
+//       // Process cycles data
+//       let cyclesData = [];
+//       let analysis = {};
+      
+//       if (cycles.status === 'fulfilled' && cycles.value) {
+//         const cycleResponse = cycles.value;
+//         if (cycleResponse.data && cycleResponse.data.data) {
+//           cyclesData = cycleResponse.data.data || [];
+//           analysis = cycleResponse.data.analysis || {};
+//         } else if (cycleResponse.data && cycleResponse.data.cycles) {
+//           cyclesData = cycleResponse.data.cycles || [];
+//           analysis = cycleResponse.data.analysis || {};
+//         } else if (cycleResponse.data && Array.isArray(cycleResponse.data)) {
+//           cyclesData = cycleResponse.data;
+//         }
+//       }
+      
+//       if (cyclesData.length > 0) {
+//         const lastCycle = cyclesData[0];
+//         const cycleLength = analysis.averageLength || 28;
+//         const nextCycleDate = analysis.predictedNext || new Date(new Date(lastCycle.startDate).getTime() + (cycleLength * 24 * 60 * 60 * 1000));
+        
+//         const ovulationStart = new Date(nextCycleDate);
+//         ovulationStart.setDate(ovulationStart.getDate() - 18);
+//         const ovulationEnd = new Date(nextCycleDate);
+//         ovulationEnd.setDate(ovulationEnd.getDate() - 10);
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           femaleHealth: {
+//             ...prev.femaleHealth,
+//             hasData: true,
+//             lastCycle: lastCycle,
+//             cycleLength: cycleLength,
+//             nextCycle: nextCycleDate,
+//             ovulationWindow: { start: ovulationStart, end: ovulationEnd }
+//           }
+//         }));
+//       }
+
+//       // Process Pregnancy data - FIXED: Correct response structure
+//       let pregnancyData = null;
+//       if (pregnancyRecords.status === 'fulfilled' && pregnancyRecords.value) {
+//         const pregResponse = pregnancyRecords.value;
+//         console.log('📊 Pregnancy raw response:', pregResponse);
+        
+//         // Based on your backend: { success: true, record: {...}, insights: {...}, tip: "..." }
+//         if (pregResponse.success && pregResponse.record) {
+//           pregnancyData = pregResponse.record;
+//           console.log('✅ Found pregnancy record:', pregnancyData);
+//         } else if (pregResponse.record) {
+//           pregnancyData = pregResponse.record;
+//         } else if (pregResponse.data && pregResponse.data.record) {
+//           pregnancyData = pregResponse.data.record;
+//         } else if (pregResponse.data) {
+//           pregnancyData = pregResponse.data;
+//         }
+//       }
+      
+//       console.log('📊 Pregnancy data extracted:', pregnancyData);
+      
+//       if (pregnancyData) {
+//         // Get conception date or start date
+//         const conceptionDate = pregnancyData.conceptionDate ? new Date(pregnancyData.conceptionDate) : null;
+//         const dueDate = pregnancyData.dueDate ? new Date(pregnancyData.dueDate) : null;
+//         const currentWeek = pregnancyData.currentWeek || pregnancyData.week || 0;
+        
+//         let weeksPregnant = currentWeek;
+//         let trimester = null;
+        
+//         // Calculate weeks if we have conception date
+//         if (conceptionDate && !weeksPregnant) {
+//           const today = new Date();
+//           const diffTime = Math.abs(today - conceptionDate);
+//           weeksPregnant = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+//         }
+        
+//         if (weeksPregnant <= 12) trimester = 'First Trimester (1-12 weeks)';
+//         else if (weeksPregnant <= 28) trimester = 'Second Trimester (13-28 weeks)';
+//         else trimester = 'Third Trimester (29-40 weeks)';
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           femaleHealth: {
+//             ...prev.femaleHealth,
+//             pregnancy: {
+//               hasData: true,
+//               isPregnant: true,
+//               dueDate: dueDate,
+//               startDate: conceptionDate,
+//               conceptionDate: conceptionDate,
+//               trimester: trimester,
+//               weeksPregnant: weeksPregnant,
+//               currentWeek: currentWeek
+//             }
+//           }
+//         }));
+//       }
+
+//       // Process sleep data
+//       let sleepRecordsData = [];
+//       if (sleepRecords.status === 'fulfilled' && sleepRecords.value) {
+//         if (Array.isArray(sleepRecords.value)) {
+//           sleepRecordsData = sleepRecords.value;
+//         } else if (sleepRecords.value.data && Array.isArray(sleepRecords.value.data)) {
+//           sleepRecordsData = sleepRecords.value.data;
+//         }
+//       }
+      
+//       if (sleepRecordsData.length > 0) {
+//         const last7Days = sleepRecordsData.slice(-7);
+//         let totalHours = 0;
+//         let totalQuality = 0;
+//         let qualityCount = 0;
+//         const sleepDurations = [];
+        
+//         last7Days.forEach(record => {
+//           const duration = calculateSleepDuration(record.sleepStart, record.sleepEnd);
+//           totalHours += duration;
+//           sleepDurations.push(duration);
+          
+//           if (record.sleepQuality) {
+//             totalQuality += record.sleepQuality;
+//             qualityCount++;
+//           }
+//         });
+        
+//         const avgHours = last7Days.length > 0 ? parseFloat((totalHours / last7Days.length).toFixed(1)) : 0;
+//         const avgQuality = qualityCount > 0 ? parseFloat((totalQuality / qualityCount).toFixed(1)) : 0;
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           sleep: {
+//             records: sleepRecordsData,
+//             avgHours: avgHours,
+//             avgQuality: avgQuality,
+//             totalHours: totalHours
+//           }
+//         }));
+        
+//         setTrends(prev => ({
+//           ...prev,
+//           sleep: sleepDurations
+//         }));
+        
+//         setWeeklyStats(prev => ({
+//           ...prev,
+//           sleepHours: totalHours,
+//           sleepQuality: avgQuality
+//         }));
+//       }
+
+//       // Process fitness data
+//       const fitnessData = fitnessRecords.value || [];
+//       if (fitnessData.length > 0) {
+//         const last7Days = fitnessData.slice(-7);
+//         const totalWorkouts = last7Days.length;
+//         const totalCalories = last7Days.reduce((sum, r) => sum + (r.caloriesBurned || (r.duration * 5) || 0), 0);
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           fitness: {
+//             records: fitnessData,
+//             totalWorkouts: totalWorkouts,
+//             totalDuration: last7Days.reduce((sum, r) => sum + (r.duration || 0), 0),
+//             totalCalories: totalCalories
+//           }
+//         }));
+        
+//         setWeeklyStats(prev => ({
+//           ...prev,
+//           workouts: totalWorkouts,
+//           caloriesBurned: totalCalories
+//         }));
+        
+//         setTrends(prev => ({
+//           ...prev,
+//           workouts: last7Days.map(r => r.duration || 0)
+//         }));
+//       }
+
+//       // Process nutrition data
+//       const nutritionData = nutritionRecords.value || [];
+//       if (nutritionData.length > 0) {
+//         const last7Days = nutritionData.slice(-7);
+//         const totalCalories = last7Days.reduce((sum, r) => sum + (parseInt(r.calories) || 0), 0);
+//         const totalProtein = last7Days.reduce((sum, r) => sum + (parseInt(r.protein) || 0), 0);
+//         const totalCarbs = last7Days.reduce((sum, r) => sum + (parseInt(r.carbs) || 0), 0);
+//         const totalFats = last7Days.reduce((sum, r) => sum + (parseInt(r.fats) || 0), 0);
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           nutrition: {
+//             records: nutritionData,
+//             totalCalories: totalCalories,
+//             avgCalories: Math.round(totalCalories / (last7Days.length || 1)),
+//             totalProtein: totalProtein,
+//             totalCarbs: totalCarbs,
+//             totalFats: totalFats
+//           }
+//         }));
+        
+//         setWeeklyStats(prev => ({
+//           ...prev,
+//           caloriesEaten: totalCalories,
+//           proteinEaten: totalProtein
+//         }));
+        
+//         setTrends(prev => ({
+//           ...prev,
+//           calories: last7Days.map(r => parseInt(r.calories) || 0)
+//         }));
+//       }
+
+//       // Process wellness activities
+//       let wellnessData = [];
+//       if (wellnessActivities.status === 'fulfilled' && wellnessActivities.value) {
+//         if (Array.isArray(wellnessActivities.value)) {
+//           wellnessData = wellnessActivities.value;
+//         } else if (wellnessActivities.value.data && Array.isArray(wellnessActivities.value.data)) {
+//           wellnessData = wellnessActivities.value.data;
+//         }
+//       }
+      
+//       if (wellnessData.length > 0) {
+//         setDashboardData(prev => ({
+//           ...prev,
+//           wellness: {
+//             activities: wellnessData,
+//             totalActivities: wellnessData.length,
+//             moodScores: wellnessData.map(w => w.moodScore || 5)
+//           }
+//         }));
+//       }
+
+//       // Process community data - FIXED: Properly extract post count
+//       let communityData = [];
+//       if (communityPosts.status === 'fulfilled' && communityPosts.value) {
+//         // Handle different response structures
+//         if (communityPosts.value.data && Array.isArray(communityPosts.value.data)) {
+//           communityData = communityPosts.value.data;
+//         } else if (Array.isArray(communityPosts.value)) {
+//           communityData = communityPosts.value;
+//         } else if (communityPosts.value.success && Array.isArray(communityPosts.value.data)) {
+//           communityData = communityPosts.value.data;
+//         }
+//       }
+      
+//       console.log('📊 Community posts found:', communityData.length);
+      
+//       if (communityData.length > 0) {
+//         const totalLikes = communityData.reduce((sum, p) => sum + (p.likesCount || p.likes?.length || 0), 0);
+//         const totalComments = communityData.reduce((sum, p) => sum + (p.comments?.length || 0), 0);
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           community: {
+//             posts: communityData,
+//             totalPosts: communityData.length,
+//             totalLikes: totalLikes,
+//             totalComments: totalComments
+//           }
+//         }));
+        
+//         setWeeklyStats(prev => ({
+//           ...prev,
+//           communityPosts: communityData.length
+//         }));
+//       }
+
+//       // Process Men's Health data
+//       let menHealthData = [];
+//       if (menHealthRecords.status === 'fulfilled' && menHealthRecords.value) {
+//         if (menHealthRecords.value.records && Array.isArray(menHealthRecords.value.records)) {
+//           menHealthData = menHealthRecords.value.records;
+//         } else if (menHealthRecords.value.data && Array.isArray(menHealthRecords.value.data)) {
+//           menHealthData = menHealthRecords.value.data;
+//         } else if (Array.isArray(menHealthRecords.value)) {
+//           menHealthData = menHealthRecords.value;
+//         }
+//       }
+      
+//       if (menHealthData.length > 0) {
+//         const recentEntries = menHealthData.slice(-7);
+//         const totalStress = recentEntries.reduce((sum, r) => sum + (r.stressLevel || 5), 0);
+//         const totalEnergy = recentEntries.reduce((sum, r) => sum + (r.energyLevel || 5), 0);
+//         const totalSleep = recentEntries.reduce((sum, r) => sum + (r.sleepHours || 7), 0);
+//         const totalWorkouts = recentEntries.reduce((sum, r) => sum + (r.workoutDays || 3), 0);
+        
+//         const avgStress = recentEntries.length > 0 ? parseFloat((totalStress / recentEntries.length).toFixed(1)) : 0;
+//         const avgEnergy = recentEntries.length > 0 ? parseFloat((totalEnergy / recentEntries.length).toFixed(1)) : 0;
+//         const avgSleep = recentEntries.length > 0 ? parseFloat((totalSleep / recentEntries.length).toFixed(1)) : 0;
+//         const avgWorkouts = recentEntries.length > 0 ? parseFloat((totalWorkouts / recentEntries.length).toFixed(1)) : 0;
+        
+//         // Calculate health score
+//         let healthScore = 0;
+//         if (avgStress <= 3) healthScore += 30;
+//         else if (avgStress <= 6) healthScore += 20;
+//         else healthScore += 10;
+        
+//         if (avgSleep >= 7 && avgSleep <= 9) healthScore += 25;
+//         else if (avgSleep >= 6) healthScore += 15;
+//         else healthScore += 5;
+        
+//         if (avgWorkouts >= 4) healthScore += 25;
+//         else if (avgWorkouts >= 2) healthScore += 15;
+//         else healthScore += 5;
+        
+//         if (avgEnergy >= 8) healthScore += 20;
+//         else if (avgEnergy >= 5) healthScore += 10;
+//         else healthScore += 5;
+        
+//         let healthStatus = 'Good';
+//         if (healthScore >= 80) healthStatus = 'Excellent';
+//         else if (healthScore >= 60) healthStatus = 'Good';
+//         else if (healthScore >= 40) healthStatus = 'Fair';
+//         else healthStatus = 'Needs Attention';
+        
+//         const recentMoods = recentEntries.map(r => {
+//           if (r.stressLevel > 7) return 'stressed';
+//           if (r.energyLevel < 4) return 'tired';
+//           if (r.sleepHours < 6) return 'sleep-deprived';
+//           return 'balanced';
+//         });
+        
+//         setDashboardData(prev => ({
+//           ...prev,
+//           menHealth: {
+//             hasData: true,
+//             lastCheckup: recentEntries[0]?.createdAt || null,
+//             healthStatus: healthStatus,
+//             averageStress: avgStress,
+//             averageEnergy: avgEnergy,
+//             averageSleep: avgSleep,
+//             workoutDays: avgWorkouts,
+//             recentMoods: recentMoods,
+//             healthScore: healthScore
+//           }
+//         }));
+//       }
+
+//       // Build recent activity feed
+//       const activities = [];
+      
+//       if (fitnessData.length > 0) {
+//         fitnessData.slice(0, 3).forEach(f => {
+//           activities.push({
+//             type: 'fitness',
+//             title: 'Workout',
+//             description: `${f.activityType || 'Exercise'} - ${f.duration || 0} mins`,
+//             time: f.createdAt,
+//             icon: <Dumbbell className="w-4 h-4" />
+//           });
+//         });
+//       }
+      
+//       if (nutritionData.length > 0) {
+//         nutritionData.slice(0, 3).forEach(n => {
+//           activities.push({
+//             type: 'nutrition',
+//             title: 'Meal Logged',
+//             description: `${n.meal || 'Meal'} - ${n.calories} kcal`,
+//             time: n.createdAt,
+//             icon: <UtensilsCrossed className="w-4 h-4" />
+//           });
+//         });
+//       }
+      
+//       if (sleepRecordsData.length > 0) {
+//         sleepRecordsData.slice(0, 3).forEach(s => {
+//           const duration = calculateSleepDuration(s.sleepStart, s.sleepEnd);
+//           activities.push({
+//             type: 'sleep',
+//             title: 'Sleep Recorded',
+//             description: `${duration.toFixed(1)} hours - Quality: ${s.sleepQuality || 0}/10`,
+//             time: s.createdAt,
+//             icon: <Moon className="w-4 h-4" />
+//           });
+//         });
+//       }
+      
+//       if (communityData.length > 0) {
+//         communityData.slice(0, 3).forEach(p => {
+//           activities.push({
+//             type: 'community',
+//             title: 'Community Post',
+//             description: p.content?.substring(0, 50) + (p.content?.length > 50 ? '...' : ''),
+//             time: p.createdAt,
+//             icon: <MessageCircle className="w-4 h-4" />
+//           });
+//         });
+//       }
+      
+//       activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+//       setDashboardData(prev => ({
+//         ...prev,
+//         recentActivity: activities.slice(0, 10)
+//       }));
+
+//     } catch (error) {
+//       console.error('Error fetching dashboard data:', error);
+//       toast.custom((t) => (
+//         <ErrorToast
+//           message="Data Load Error"
+//           description="Failed to load dashboard data. Please refresh."
+//         />
+//       ), { duration: 4000 });
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
-//   const fetchRecentInsights = async () => {
-//     try {
-//       const data = await apiService.fetchInsights();
-//       setInsights(data.slice(0, 5));
-//     } catch (err) {
-//       console.error('Failed to fetch insights:', err);
-//     }
-//   };
+//   const handleDownloadReport = async () => {
+//     const loadingToast = toast.loading(
+//       <div className="flex items-center gap-2">
+//         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+//         <span>Generating your weekly health report...</span>
+//       </div>,
+//       {
+//         style: {
+//           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+//           color: '#fff',
+//           borderRadius: '12px',
+//           padding: '12px 20px',
+//         },
+//         duration: Infinity
+//       }
+//     );
 
-//   const fetchActivityStats = async () => {
-//     try {
-//       const data = await apiService.getActivityStats();
-//       setStats(data);
-//     } catch (err) {
-//       console.error('Failed to fetch activity stats:', err);
-//     }
-//   };
-
-//   const handleGenerateReport = async () => {
 //     try {
 //       setGeneratingReport(true);
 //       const response = await apiService.generateWeeklyReport();
       
-//       if (response.success) {
-//         // Trigger download
-//         const downloadResponse = await apiService.downloadWeeklyReport(response.downloadUrl.split('/').pop());
+//       if (response.success && response.downloadUrl) {
+//         const filename = response.downloadUrl.split('/').pop();
+//         const downloadResponse = await apiService.downloadWeeklyReport(filename);
         
-//         // Create blob and download
 //         const blob = new Blob([downloadResponse.data], { type: 'application/pdf' });
 //         const url = window.URL.createObjectURL(blob);
 //         const link = document.createElement('a');
 //         link.href = url;
-//         link.download = response.downloadUrl.split('/').pop() || 'weekly-report.pdf';
+//         link.download = filename || 'weekly-health-report.pdf';
 //         document.body.appendChild(link);
 //         link.click();
 //         document.body.removeChild(link);
 //         window.URL.revokeObjectURL(url);
+        
+//         toast.dismiss(loadingToast);
+//         toast.custom((t) => (
+//           <SuccessToast
+//             message="Weekly Report Downloaded!"
+//             description="Your health report has been saved to your device"
+//           />
+//         ), { duration: 5000 });
+        
+//       } else {
+//         toast.dismiss(loadingToast);
+//         toast.custom((t) => (
+//           <ErrorToast
+//             message="Report Generation Failed"
+//             description={response.message || 'Unable to generate report. Please try again.'}
+//           />
+//         ), { duration: 5000 });
 //       }
-//     } catch (err) {
-//       setError('Failed to generate report');
-//       console.error(err);
+//     } catch (error) {
+//       console.error('Error downloading report:', error);
+//       toast.dismiss(loadingToast);
+//       toast.custom((t) => (
+//         <ErrorToast
+//           message="Download Failed"
+//           description="Something went wrong. Please try again later."
+//         />
+//       ), { duration: 5000 });
 //     } finally {
 //       setGeneratingReport(false);
 //     }
 //   };
 
-//   const handleRefresh = () => {
-//     fetchDashboardData();
-//     fetchRecentInsights();
-//     fetchActivityStats();
-//   };
-
-//   const handleGenerateInsight = async (category) => {
+//   const formatDate = (date) => {
+//     if (!date) return 'N/A';
 //     try {
-//       setLoading(true);
-//       const response = await apiService.collectRealData(category);
-      
-//       if (response.success) {
-//         fetchDashboardData();
-//         fetchRecentInsights();
-//       }
-//     } catch (err) {
-//       setError(`Failed to generate ${category} insight`);
-//       console.error(err);
-//     } finally {
-//       setLoading(false);
+//       return new Date(date).toLocaleDateString('en-US', {
+//         month: 'short',
+//         day: 'numeric',
+//         year: 'numeric'
+//       });
+//     } catch {
+//       return 'N/A';
 //     }
 //   };
 
-//   const formatDate = (dateString) => {
-//     return new Date(dateString).toLocaleDateString('en-US', {
-//       month: 'short',
-//       day: 'numeric',
-//       year: 'numeric'
-//     });
+//   const formatTimeAgo = (date) => {
+//     if (!date) return '';
+//     const now = new Date();
+//     const then = new Date(date);
+//     const diffMs = now - then;
+//     const diffMins = Math.floor(diffMs / 60000);
+//     const diffHours = Math.floor(diffMins / 60);
+//     const diffDays = Math.floor(diffHours / 24);
+    
+//     if (diffMins < 1) return 'just now';
+//     if (diffMins < 60) return `${diffMins} min ago`;
+//     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+//     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
 //   };
 
-//   const getCategoryIcon = (category) => {
-//     switch(category.toLowerCase()) {
-//       case 'sleeprecovery':
-//         return <Moon className="w-5 h-5" />;
-//       case 'fitness':
-//         return <Dumbbell className="w-5 h-5" />;
-//       case 'nutrition':
-//         return <Heart className="w-5 h-5" />;
-//       case 'selfcare':
-//         return <Brain className="w-5 h-5" />;
-//       case 'community':
-//         return <Users className="w-5 h-5" />;
-//       default:
-//         return <Activity className="w-5 h-5" />;
+//   // Get health status color
+//   const getHealthStatusColor = (status) => {
+//     switch(status) {
+//       case 'Excellent': return 'text-green-600 bg-green-100';
+//       case 'Good': return 'text-blue-600 bg-blue-100';
+//       case 'Fair': return 'text-yellow-600 bg-yellow-100';
+//       case 'Needs Attention': return 'text-red-600 bg-red-100';
+//       default: return 'text-gray-600 bg-gray-100';
 //     }
 //   };
 
-//   const getCategoryColor = (category) => {
-//     switch(category.toLowerCase()) {
-//       case 'sleeprecovery':
-//         return colors.info;
-//       case 'fitness':
-//         return colors.success;
-//       case 'nutrition':
-//         return colors.warning;
-//       case 'selfcare':
-//         return colors.accent;
-//       case 'community':
-//         return colors.primary;
-//       default:
-//         return colors.text;
+//   // Get mood emoji
+//   const getMoodEmoji = (mood) => {
+//     switch(mood) {
+//       case 'stressed': return '😰';
+//       case 'tired': return '😴';
+//       case 'sleep-deprived': return '😫';
+//       default: return '😊';
 //     }
 //   };
 
-//   // Prepare chart data
-//   const weeklyChartData = dashboardData?.weeklySummary ? {
-//     labels: ['Sleep', 'Workouts', 'Self-Care', 'Community'],
-//     datasets: [
-//       {
-//         label: 'Weekly Activity',
-//         data: [
-//           dashboardData.weeklySummary.totalSleepHours,
-//           dashboardData.weeklySummary.totalWorkouts,
-//           dashboardData.weeklySummary.totalSelfCare,
-//           dashboardData.weeklySummary.totalPosts
-//         ],
-//         backgroundColor: [
-//           colors.info,
-//           colors.success,
-//           colors.accent,
-//           colors.primary
-//         ],
-//         borderColor: [
-//           colors.info,
-//           colors.success,
-//           colors.accent,
-//           colors.primary
-//         ],
-//         borderWidth: 1
-//       }
-//     ]
-//   } : null;
+//   // Chart data - ONLY real data, no dummy fallbacks
+//   const sleepChartData = {
+//     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+//     datasets: [{
+//       label: 'Sleep Hours',
+//       data: trends.sleep.length === 7 ? trends.sleep : [],
+//       borderColor: colors.sleep,
+//       backgroundColor: `${colors.sleep}20`,
+//       tension: 0.4,
+//       fill: true
+//     }]
+//   };
 
-//   // Sample data for charts (you can replace with real data)
-//   const sleepQualityChartData = {
+//   const calorieChartData = {
 //     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 //     datasets: [
 //       {
-//         label: 'Sleep Quality',
-//         data: [8, 7, 6, 8, 9, 7, 8],
-//         borderColor: colors.info,
-//         backgroundColor: `${colors.info}20`,
+//         label: 'Calories Eaten',
+//         data: trends.calories.length === 7 ? trends.calories : [],
+//         borderColor: colors.nutrition,
+//         backgroundColor: `${colors.nutrition}20`,
+//         tension: 0.4
+//       },
+//       {
+//         label: 'Calories Burned',
+//         data: trends.workouts.length === 7 ? trends.workouts.map(w => w * 100) : [],
+//         borderColor: colors.fitness,
+//         backgroundColor: `${colors.fitness}20`,
 //         tension: 0.4
 //       }
 //     ]
 //   };
 
-//   const activityChartData = {
-//     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-//     datasets: [
-//       {
-//         label: 'Workouts',
-//         data: [12, 19, 15, 25, 22, 30],
-//         backgroundColor: colors.success,
-//       },
-//       {
-//         label: 'Self-Care',
-//         data: [8, 15, 12, 18, 16, 20],
-//         backgroundColor: colors.accent,
-//       }
-//     ]
+//   const macroChartData = {
+//     labels: ['Protein', 'Carbs', 'Fats'],
+//     datasets: [{
+//       data: [
+//         dashboardData.nutrition.totalProtein,
+//         dashboardData.nutrition.totalCarbs,
+//         dashboardData.nutrition.totalFats
+//       ],
+//       backgroundColor: [colors.fitness, colors.nutrition, colors.wellness],
+//       borderWidth: 0
+//     }]
 //   };
 
-//   const chartOptions = {
-//     responsive: true,
-//     maintainAspectRatio: false,
-//     plugins: {
-//       legend: {
-//         position: 'top',
-//         labels: {
-//           color: colors.text,
-//           font: {
-//             size: 12
-//           }
-//         }
-//       }
-//     },
-//     scales: {
-//       y: {
-//         beginAtZero: true,
-//         grid: {
-//           color: `${colors.text}20`
-//         },
-//         ticks: {
-//           color: colors.text
-//         }
-//       },
-//       x: {
-//         grid: {
-//           color: `${colors.text}20`
-//         },
-//         ticks: {
-//           color: colors.text
-//         }
-//       }
-//     }
-//   };
+//   const StatCard = ({ title, value, unit, icon, color, trend }) => (
+//     <motion.div
+//       whileHover={{ y: -5, transition: { duration: 0.2 } }}
+//       className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100"
+//     >
+//       <div className="flex items-start justify-between">
+//         <div>
+//           <p className="text-gray-500 text-sm font-medium">{title}</p>
+//           <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
+//             {value}{unit && <span className="text-sm ml-1 text-gray-400">{unit}</span>}
+//           </p>
+//           {trend && (
+//             <div className="flex items-center gap-1 mt-2">
+//               {trend > 0 ? (
+//                 <TrendingUp className="w-3 h-3 text-green-500" />
+//               ) : (
+//                 <TrendingUp className="w-3 h-3 text-red-500 rotate-180" />
+//               )}
+//               <span className={`text-xs ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+//                 {Math.abs(trend)}% from last week
+//               </span>
+//             </div>
+//           )}
+//         </div>
+//         <div className="p-3 rounded-xl" style={{ backgroundColor: `${color}15` }}>
+//           <div style={{ color }}>{icon}</div>
+//         </div>
+//       </div>
+//     </motion.div>
+//   );
 
-//   if (loading && !dashboardData) {
+//   const SectionCard = ({ title, icon, color, children }) => (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
+//     >
+//       <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+//         <div className="p-2 rounded-lg" style={{ backgroundColor: `${color}15` }}>
+//           <div style={{ color }}>{icon}</div>
+//         </div>
+//         <h2 className="text-lg font-semibold" style={{ color: colors.text }}>{title}</h2>
+//       </div>
+//       <div className="p-5">
+//         {children}
+//       </div>
+//     </motion.div>
+//   );
+
+//   if (loading) {
 //     return (
 //       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
 //         <div className="text-center">
 //           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: colors.accent }}></div>
-//           <p style={{ color: colors.text }}>Loading your wellness dashboard...</p>
+//           <p style={{ color: colors.text }}>Loading your dashboard...</p>
 //         </div>
 //       </div>
 //     );
@@ -1199,445 +895,497 @@
 
 //   return (
 //     <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: colors.background }}>
-//       {/* Header */}
-//       <div className="mb-6">
-//         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+//       {/* Toaster Container */}
+//       <Toaster 
+//         position="top-right"
+//         containerStyle={{
+//           top: 20,
+//           right: 20,
+//           zIndex: 9999,
+//         }}
+//         toastOptions={{
+//           duration: 4000,
+//           style: {
+//             background: 'transparent',
+//             boxShadow: 'none',
+//             padding: 0,
+//           },
+//         }}
+//       />
+      
+//       <div className="max-w-7xl mx-auto">
+//         {/* Header */}
+//         <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 //           <div>
-//             <h1 className="text-2xl md:text-3xl font-bold" style={{ color: colors.text }}>Wellness Dashboard</h1>
-//             <p className="mt-1" style={{ color: colors.text + 'CC' }}>
-//               Track your health insights and weekly progress
-//             </p>
+//             <h1 className="text-2xl md:text-3xl font-bold" style={{ color: colors.text }}>
+//               Welcome back, {user?.name || 'User'}! 👋
+//             </h1>
+//             <p className="text-gray-500 mt-1">Here's your health summary for this week</p>
 //           </div>
           
-//           <div className="flex items-center gap-3">
-//             <button
-//               onClick={handleRefresh}
-//               className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
-//               style={{ 
-//                 backgroundColor: colors.lightAccent,
-//                 color: colors.darkAccent
-//               }}
-//               disabled={loading}
-//             >
-//               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-//               Refresh
-//             </button>
-            
-//             <button
-//               onClick={handleGenerateReport}
-//               disabled={generatingReport}
-//               className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors"
-//               style={{ 
-//                 backgroundColor: colors.accent,
-//                 color: '#FFFFFF'
-//               }}
-//             >
-//               {generatingReport ? (
-//                 <>
-//                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-//                   Generating...
-//                 </>
-//               ) : (
-//                 <>
-//                   <FileText className="w-4 h-4" />
-//                   Generate Report
-//                 </>
-//               )}
-//             </button>
-//           </div>
-//         </div>
-        
-//         {/* Tabs */}
-//         <div className="flex gap-2 mt-6 border-b" style={{ borderColor: colors.text + '20' }}>
 //           <button
-//             onClick={() => setActiveTab('weekly')}
-//             className={`px-4 py-2 font-medium ${activeTab === 'weekly' ? 'border-b-2' : ''}`}
-//             style={{
-//               color: activeTab === 'weekly' ? colors.accent : colors.text + 'CC',
-//               borderColor: activeTab === 'weekly' ? colors.accent : 'transparent'
-//             }}
+//             onClick={handleDownloadReport}
+//             disabled={generatingReport}
+//             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium hover:opacity-90 transition-colors disabled:opacity-50"
 //           >
-//             <div className="flex items-center gap-2">
-//               <Calendar className="w-4 h-4" />
-//               Weekly Overview
-//             </div>
-//           </button>
-//           <button
-//             onClick={() => setActiveTab('insights')}
-//             className={`px-4 py-2 font-medium ${activeTab === 'insights' ? 'border-b-2' : ''}`}
-//             style={{
-//               color: activeTab === 'insights' ? colors.accent : colors.text + 'CC',
-//               borderColor: activeTab === 'insights' ? colors.accent : 'transparent'
-//             }}
-//           >
-//             <div className="flex items-center gap-2">
-//               <Brain className="w-4 h-4" />
-//               AI Insights
-//             </div>
-//           </button>
-//           <button
-//             onClick={() => setActiveTab('activity')}
-//             className={`px-4 py-2 font-medium ${activeTab === 'activity' ? 'border-b-2' : ''}`}
-//             style={{
-//               color: activeTab === 'activity' ? colors.accent : colors.text + 'CC',
-//               borderColor: activeTab === 'activity' ? colors.accent : 'transparent'
-//             }}
-//           >
-//             <div className="flex items-center gap-2">
-//               <Activity className="w-4 h-4" />
-//               Activity Log
-//             </div>
+//             {generatingReport ? (
+//               <>
+//                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+//                 Generating...
+//               </>
+//             ) : (
+//               <>
+//                 <BarChart3 className="w-4 h-4" />
+//                 Download Weekly Report
+//               </>
+//             )}
 //           </button>
 //         </div>
-//       </div>
 
-//       {/* Error Message */}
-//       {error && (
-//         <div className="mb-6 p-4 rounded-lg flex items-start gap-3" style={{ backgroundColor: `${colors.error}20`, borderLeft: `4px solid ${colors.error}` }}>
-//           <AlertCircle className="w-5 h-5 mt-0.5" style={{ color: colors.error }} />
-//           <div>
-//             <p className="font-medium" style={{ color: colors.error }}>Error</p>
-//             <p style={{ color: colors.text }}>{error}</p>
-//           </div>
+//         {/* Quick Stats Row */}
+//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+//           <StatCard
+//             title="Weekly Activity"
+//             value={dashboardData.fitness.totalWorkouts + dashboardData.wellness.totalActivities}
+//             icon={<Activity className="w-5 h-5" />}
+//             color={colors.primary}
+//             trend={5}
+//           />
+//           <StatCard
+//             title="Sleep Average"
+//             value={dashboardData.sleep.avgHours || 0}
+//             unit="hrs"
+//             icon={<Moon className="w-5 h-5" />}
+//             color={colors.sleep}
+//             trend={2}
+//           />
+//           <StatCard
+//             title="Calories Burned"
+//             value={dashboardData.fitness.totalCalories || 0}
+//             unit="kcal"
+//             icon={<Flame className="w-5 h-5" />}
+//             color={colors.fitness}
+//           />
+//           <StatCard
+//             title="Community Posts"
+//             value={dashboardData.community.totalPosts || 0}
+//             icon={<Users className="w-5 h-5" />}
+//             color={colors.community}
+//           />
 //         </div>
-//       )}
 
-//       {/* Weekly Overview Tab */}
-//       {activeTab === 'weekly' && dashboardData && (
-//         <>
-//           {/* Summary Cards */}
-//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-//             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center justify-between">
-//                 <div>
-//                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Sleep Hours</p>
-//                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-//                     {dashboardData.weeklySummary?.totalSleepHours?.toFixed(1) || '0'}h
-//                   </p>
-//                   <p className="text-sm mt-1" style={{ color: colors.accent }}>
-//                     Quality: {dashboardData.weeklySummary?.avgSleepQuality || '0'}/10
-//                   </p>
-//                 </div>
-//                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.info}20` }}>
-//                   <Moon className="w-6 h-6" style={{ color: colors.info }} />
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center justify-between">
-//                 <div>
-//                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Workouts</p>
-//                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-//                     {dashboardData.weeklySummary?.totalWorkouts || '0'}
-//                   </p>
-//                   <p className="text-sm mt-1" style={{ color: colors.success }}>
-//                     ~{dashboardData.weeklySummary?.avgCaloriesBurned || '0'} calories
-//                   </p>
-//                 </div>
-//                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.success}20` }}>
-//                   <Dumbbell className="w-6 h-6" style={{ color: colors.success }} />
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center justify-between">
-//                 <div>
-//                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Self-Care</p>
-//                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-//                     {dashboardData.weeklySummary?.totalSelfCare || '0'}
-//                   </p>
-//                   <p className="text-sm mt-1" style={{ color: colors.accent }}>
-//                     Activities completed
-//                   </p>
-//                 </div>
-//                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.accent}20` }}>
-//                   <Brain className="w-6 h-6" style={{ color: colors.accent }} />
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center justify-between">
-//                 <div>
-//                   <p className="text-sm" style={{ color: colors.text + 'CC' }}>Community</p>
-//                   <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-//                     {dashboardData.weeklySummary?.totalPosts || '0'}
-//                   </p>
-//                   <p className="text-sm mt-1" style={{ color: colors.primary }}>
-//                     Posts & interactions
-//                   </p>
-//                 </div>
-//                 <div className="p-3 rounded-full" style={{ backgroundColor: `${colors.primary}20` }}>
-//                   <Users className="w-6 h-6" style={{ color: colors.primary }} />
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Charts */}
-//           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-//             {/* Weekly Activity Chart */}
-//             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center justify-between mb-4">
-//                 <h3 className="font-bold" style={{ color: colors.text }}>Weekly Activity Summary</h3>
-//                 <BarChart3 className="w-5 h-5" style={{ color: colors.text + '80' }} />
-//               </div>
-//               <div className="h-64">
-//                 {weeklyChartData ? (
-//                   <Bar data={weeklyChartData} options={chartOptions} />
-//                 ) : (
-//                   <div className="h-full flex items-center justify-center" style={{ color: colors.text + '80' }}>
-//                     No weekly data available
-//                   </div>
-//                 )}
-//               </div>
-//             </div>
-
-//             {/* Sleep Quality Chart */}
-//             <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center justify-between mb-4">
-//                 <h3 className="font-bold" style={{ color: colors.text }}>Sleep Quality Trend</h3>
-//                 <TrendingUp className="w-5 h-5" style={{ color: colors.text + '80' }} />
-//               </div>
-//               <div className="h-64">
-//                 <Line data={sleepQualityChartData} options={chartOptions} />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* AI Summary */}
-//           {dashboardData.aiSummary && (
-//             <div className="mb-6 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//               <div className="flex items-center gap-3 mb-3">
-//                 <div className="p-2 rounded-full" style={{ backgroundColor: `${colors.accent}20` }}>
-//                   <Brain className="w-5 h-5" style={{ color: colors.accent }} />
-//                 </div>
-//                 <h3 className="font-bold" style={{ color: colors.text }}>AI Wellness Summary</h3>
-//               </div>
-//               <p style={{ color: colors.text }}>
-//                 {dashboardData.aiSummary}
-//               </p>
-//             </div>
-//           )}
-//         </>
-//       )}
-
-//       {/* Insights Tab */}
-//       {activeTab === 'insights' && (
-//         <div className="space-y-6">
-//           {/* Generate New Insights */}
-//           <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Generate New Insights</h3>
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-//               {['sleepRecovery', 'fitness', 'nutrition', 'selfCare', 'community'].map((category) => (
-//                 <button
-//                   key={category}
-//                   onClick={() => handleGenerateInsight(category)}
-//                   disabled={loading}
-//                   className="p-3 rounded-lg text-center transition-all hover:scale-105 disabled:opacity-50"
-//                   style={{ 
-//                     backgroundColor: getCategoryColor(category) + '20',
-//                     color: getCategoryColor(category)
-//                   }}
-//                 >
-//                   <div className="flex flex-col items-center gap-2">
-//                     {getCategoryIcon(category)}
-//                     <span className="text-sm font-medium capitalize">
-//                       {category === 'sleepRecovery' ? 'Sleep' : category}
+//         {/* Two Column Layout */}
+//         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+//           {/* Female Health Section with Pregnancy */}
+//           <SectionCard title="Female Health" icon={<Droplets className="w-5 h-5" />} color={colors.female}>
+//             <div className="space-y-4">
+//               {/* Cycle Tracking */}
+//               {dashboardData.femaleHealth.hasData ? (
+//                 <div className="space-y-3">
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-500">Last Cycle</span>
+//                     <span className="font-medium text-gray-800">
+//                       {formatDate(dashboardData.femaleHealth.lastCycle?.startDate)} - {formatDate(dashboardData.femaleHealth.lastCycle?.endDate)}
 //                     </span>
 //                   </div>
-//                 </button>
-//               ))}
-//             </div>
-//           </div>
-
-//           {/* Recent Insights */}
-//           <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Recent Insights</h3>
-//             <div className="space-y-4">
-//               {insights.length > 0 ? (
-//                 insights.map((insight) => (
-//                   <div
-//                     key={insight._id}
-//                     className="p-4 rounded-lg border"
-//                     style={{ 
-//                       backgroundColor: colors.background,
-//                       borderColor: getCategoryColor(insight.category) + '40'
-//                     }}
-//                   >
-//                     <div className="flex items-start justify-between">
-//                       <div className="flex items-center gap-3">
-//                         <div
-//                           className="p-2 rounded-full"
-//                           style={{ backgroundColor: getCategoryColor(insight.category) + '20' }}
-//                         >
-//                           {getCategoryIcon(insight.category)}
-//                         </div>
-//                         <div>
-//                           <h4 className="font-bold capitalize" style={{ color: colors.text }}>
-//                             {insight.category === 'sleepRecovery' ? 'Sleep Recovery' : insight.category}
-//                           </h4>
-//                           <p className="text-sm mt-1" style={{ color: colors.text + 'CC' }}>
-//                             {insight.summary}
-//                           </p>
-//                         </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-500">Cycle Length</span>
+//                     <span className="font-medium text-gray-800">{dashboardData.femaleHealth.cycleLength} days</span>
+//                   </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-500">Next Cycle</span>
+//                     <span className="font-medium text-pink-600">{formatDate(dashboardData.femaleHealth.nextCycle)}</span>
+//                   </div>
+//                   {dashboardData.femaleHealth.ovulationWindow && (
+//                     <div className="mt-2 pt-2 border-t border-gray-100">
+//                       <div className="flex justify-between items-center">
+//                         <span className="text-gray-500">Ovulation Window</span>
+//                         <span className="font-medium text-purple-600">
+//                           {formatDate(dashboardData.femaleHealth.ovulationWindow.start)} - {formatDate(dashboardData.femaleHealth.ovulationWindow.end)}
+//                         </span>
 //                       </div>
-//                       <span className="text-sm" style={{ color: colors.text + '80' }}>
-//                         {formatDate(insight.createdAt)}
-//                       </span>
 //                     </div>
-                    
-//                     {insight.aiGeneratedTips && insight.aiGeneratedTips.length > 0 && (
-//                       <div className="mt-3 pt-3 border-t" style={{ borderColor: getCategoryColor(insight.category) + '20' }}>
-//                         <p className="text-sm font-medium mb-2" style={{ color: colors.text }}>
-//                           AI Recommendations:
-//                         </p>
-//                         <ul className="space-y-1">
-//                           {insight.aiGeneratedTips.map((tip, index) => (
-//                             <li key={index} className="text-sm flex items-start gap-2" style={{ color: colors.text + 'CC' }}>
-//                               <span className="mt-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getCategoryColor(insight.category) }}></span>
-//                               {tip}
-//                             </li>
-//                           ))}
-//                         </ul>
+//                   )}
+//                 </div>
+//               ) : (
+//                 <div className="text-center py-3">
+//                   <Calendar className="w-10 h-10 mx-auto mb-2 opacity-50" style={{ color: colors.text }} />
+//                   <p className="text-gray-500 text-sm">No cycle data yet</p>
+//                   <button 
+//                     onClick={() => navigate('/female-health/cycle')}
+//                     className="mt-2 text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-pink-500 to-rose-500 text-white"
+//                   >
+//                     Log Cycle
+//                   </button>
+//                 </div>
+//               )}
+              
+//               {/* Pregnancy Tracking - NOW SHOWS REAL DATA */}
+//               {dashboardData.femaleHealth.pregnancy.hasData ? (
+//                 <div className="mt-4 pt-3 border-t border-pink-200 bg-pink-50/50 rounded-lg p-3">
+//                   <div className="flex items-center gap-2 mb-2">
+//                     <Baby className="w-4 h-4 text-pink-500" />
+//                     <span className="font-semibold text-pink-700 text-sm">Pregnancy Tracker</span>
+//                   </div>
+//                   <div className="space-y-2 text-sm">
+//                     {dashboardData.femaleHealth.pregnancy.dueDate && (
+//                       <div className="flex justify-between">
+//                         <span className="text-gray-600">Due Date</span>
+//                         <span className="font-medium text-pink-600">{formatDate(dashboardData.femaleHealth.pregnancy.dueDate)}</span>
+//                       </div>
+//                     )}
+//                     {dashboardData.femaleHealth.pregnancy.conceptionDate && (
+//                       <div className="flex justify-between">
+//                         <span className="text-gray-600">Conception Date</span>
+//                         <span className="font-medium text-pink-600">{formatDate(dashboardData.femaleHealth.pregnancy.conceptionDate)}</span>
+//                       </div>
+//                     )}
+//                     {dashboardData.femaleHealth.pregnancy.trimester && (
+//                       <div className="flex justify-between">
+//                         <span className="text-gray-600">Trimester</span>
+//                         <span className="font-medium text-pink-600">{dashboardData.femaleHealth.pregnancy.trimester}</span>
+//                       </div>
+//                     )}
+//                     {dashboardData.femaleHealth.pregnancy.weeksPregnant > 0 && (
+//                       <div className="flex justify-between">
+//                         <span className="text-gray-600">Weeks Pregnant</span>
+//                         <span className="font-medium text-pink-600">{dashboardData.femaleHealth.pregnancy.weeksPregnant} weeks</span>
 //                       </div>
 //                     )}
 //                   </div>
-//                 ))
+//                   <button 
+//                     onClick={() => navigate('/female-health/pregnancy')}
+//                     className="mt-3 w-full text-xs py-1.5 rounded-lg bg-pink-100 text-pink-700 hover:bg-pink-200 transition-colors"
+//                   >
+//                     Update Pregnancy
+//                   </button>
+//                 </div>
 //               ) : (
-//                 <div className="text-center py-8" style={{ color: colors.text + '80' }}>
-//                   <Brain className="w-12 h-12 mx-auto mb-3 opacity-50" />
-//                   <p>No insights generated yet. Generate your first insight above!</p>
+//                 <div className="mt-3 pt-2 border-t border-gray-100">
+//                   <button 
+//                     onClick={() => navigate('/female-health/pregnancy')}
+//                     className="w-full text-xs py-1.5 rounded-lg border border-pink-200 text-pink-600 hover:bg-pink-50 transition-colors flex items-center justify-center gap-1"
+//                   >
+//                     <Baby className="w-3 h-3" />
+//                     Track Pregnancy
+//                   </button>
 //                 </div>
 //               )}
 //             </div>
-//           </div>
-//         </div>
-//       )}
+//           </SectionCard>
 
-//       {/* Activity Tab */}
-//       {activeTab === 'activity' && (
-//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-//           {/* Activity Stats */}
-//           <div className="lg:col-span-2 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Activity Overview</h3>
-//             <div className="h-80">
-//               <Bar data={activityChartData} options={chartOptions} />
-//             </div>
-//           </div>
-
-//           {/* Quick Stats */}
-//           <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//             <h3 className="font-bold mb-4" style={{ color: colors.text }}>Quick Stats</h3>
-//             <div className="space-y-4">
-//               {stats ? (
-//                 <>
-//                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-//                     <div className="flex items-center gap-3">
-//                       <Moon className="w-4 h-4" style={{ color: colors.info }} />
-//                       <span style={{ color: colors.text }}>Sleep Records</span>
-//                     </div>
-//                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.sleep || 0}</span>
-//                   </div>
-//                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-//                     <div className="flex items-center gap-3">
-//                       <Dumbbell className="w-4 h-4" style={{ color: colors.success }} />
-//                       <span style={{ color: colors.text }}>Workout Sessions</span>
-//                     </div>
-//                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.fitness || 0}</span>
-//                   </div>
-//                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-//                     <div className="flex items-center gap-3">
-//                       <Brain className="w-4 h-4" style={{ color: colors.accent }} />
-//                       <span style={{ color: colors.text }}>Self-Care Activities</span>
-//                     </div>
-//                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.selfCare || 0}</span>
-//                   </div>
-//                   <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-//                     <div className="flex items-center gap-3">
-//                       <Users className="w-4 h-4" style={{ color: colors.primary }} />
-//                       <span style={{ color: colors.text }}>Community Posts</span>
-//                     </div>
-//                     <span className="font-bold" style={{ color: colors.text }}>{stats.recordCounts?.community || 0}</span>
-//                   </div>
-//                 </>
-//               ) : (
-//                 <div className="text-center py-8" style={{ color: colors.text + '80' }}>
-//                   <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
-//                   <p>Loading activity stats...</p>
+//           {/* Men's Health Section */}
+//           <SectionCard title="Men's Health" icon={<Shield className="w-5 h-5" />} color={colors.male}>
+//             {dashboardData.menHealth.hasData ? (
+//               <div className="space-y-4">
+//                 {/* Health Status */}
+//                 <div className="flex justify-between items-center">
+//                   <span className="text-gray-500">Health Status</span>
+//                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${getHealthStatusColor(dashboardData.menHealth.healthStatus)}`}>
+//                     {dashboardData.menHealth.healthStatus}
+//                     {dashboardData.menHealth.healthStatus === 'Excellent' && ' 🎯'}
+//                     {dashboardData.menHealth.healthStatus === 'Good' && ' ✓'}
+//                     {dashboardData.menHealth.healthStatus === 'Fair' && ' ⚠️'}
+//                     {dashboardData.menHealth.healthStatus === 'Needs Attention' && ' ⚠️'}
+//                   </span>
 //                 </div>
-//               )}
-//             </div>
-//           </div>
-
-//           {/* Report History */}
-//           <div className="lg:col-span-3 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-//             <div className="flex items-center justify-between mb-4">
-//               <h3 className="font-bold" style={{ color: colors.text }}>Recent Reports</h3>
-//               <button
-//                 onClick={handleGenerateReport}
-//                 disabled={generatingReport}
-//                 className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg"
-//                 style={{ 
-//                   backgroundColor: colors.lightAccent,
-//                   color: colors.darkAccent
-//                 }}
-//               >
-//                 <FileText className="w-4 h-4" />
-//                 New Report
-//               </button>
-//             </div>
-//             <div className="space-y-3">
-//               <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-//                 <div className="flex items-center gap-3">
-//                   <FileText className="w-4 h-4" style={{ color: colors.accent }} />
-//                   <div>
-//                     <p style={{ color: colors.text }}>Weekly Health Report</p>
-//                     <p className="text-sm" style={{ color: colors.text + '80' }}>
-//                       Generated {new Date().toLocaleDateString()}
-//                     </p>
+                
+//                 {/* Health Score */}
+//                 <div className="flex items-center justify-center mb-2">
+//                   <div className="relative w-24 h-24">
+//                     <svg className="w-24 h-24 transform -rotate-90">
+//                       <circle
+//                         cx="48"
+//                         cy="48"
+//                         r="42"
+//                         stroke="currentColor"
+//                         strokeWidth="8"
+//                         fill="none"
+//                         className="text-gray-200"
+//                       />
+//                       <circle
+//                         cx="48"
+//                         cy="48"
+//                         r="42"
+//                         stroke="currentColor"
+//                         strokeWidth="8"
+//                         fill="none"
+//                         strokeDasharray={`${(dashboardData.menHealth.healthScore / 100) * 264} 264`}
+//                         className="text-blue-500 transition-all duration-500"
+//                         style={{ strokeDashoffset: 0 }}
+//                       />
+//                     </svg>
+//                     <div className="absolute inset-0 flex items-center justify-center">
+//                       <div className="text-center">
+//                         <div className="text-2xl font-bold text-blue-600">{dashboardData.menHealth.healthScore}</div>
+//                         <div className="text-xs text-gray-500">Score</div>
+//                       </div>
+//                     </div>
 //                   </div>
 //                 </div>
+                
+//                 {/* Average Metrics */}
+//                 <div className="grid grid-cols-2 gap-3">
+//                   <div className="bg-red-50 rounded-lg p-3 text-center">
+//                     <div className="text-sm text-gray-500">Stress Level</div>
+//                     <div className="text-xl font-bold text-red-600">{dashboardData.menHealth.averageStress}/10</div>
+//                   </div>
+//                   <div className="bg-green-50 rounded-lg p-3 text-center">
+//                     <div className="text-sm text-gray-500">Energy Level</div>
+//                     <div className="text-xl font-bold text-green-600">{dashboardData.menHealth.averageEnergy}/10</div>
+//                   </div>
+//                   <div className="bg-purple-50 rounded-lg p-3 text-center">
+//                     <div className="text-sm text-gray-500">Sleep Hours</div>
+//                     <div className="text-xl font-bold text-purple-600">{dashboardData.menHealth.averageSleep}h</div>
+//                   </div>
+//                   <div className="bg-orange-50 rounded-lg p-3 text-center">
+//                     <div className="text-sm text-gray-500">Workouts/Week</div>
+//                     <div className="text-xl font-bold text-orange-600">{dashboardData.menHealth.workoutDays} days</div>
+//                   </div>
+//                 </div>
+                
+//                 {/* Last Checkup */}
+//                 <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+//                   <span className="text-gray-500">Last Checkup</span>
+//                   <span className="font-medium text-gray-800">
+//                     {dashboardData.menHealth.lastCheckup 
+//                       ? formatDate(dashboardData.menHealth.lastCheckup)
+//                       : 'Not recorded'}
+//                   </span>
+//                 </div>
+                
+//                 {/* Recent Mood Trends */}
+//                 {dashboardData.menHealth.recentMoods.length > 0 && (
+//                   <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+//                     <div className="flex items-center gap-2 mb-2">
+//                       <Brain className="w-4 h-4 text-purple-500" />
+//                       <span className="text-sm font-medium text-gray-700">Recent Mood Trend</span>
+//                     </div>
+//                     <div className="flex gap-2">
+//                       {dashboardData.menHealth.recentMoods.slice(0, 7).map((mood, idx) => (
+//                         <div key={idx} className="flex flex-col items-center">
+//                           <div className="text-xl">{getMoodEmoji(mood)}</div>
+//                           <div className="text-xs text-gray-500 mt-1">{idx + 1}</div>
+//                         </div>
+//                       ))}
+//                     </div>
+//                   </div>
+//                 )}
+                
+//                 {/* Action Button */}
 //                 <button 
-//                   onClick={handleGenerateReport}
-//                   className="p-1.5 rounded hover:opacity-80 transition-opacity" 
-//                   style={{ backgroundColor: colors.lightAccent }}
+//                   onClick={() => navigate('/men-health')}
+//                   className="w-full py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium hover:opacity-90 transition-colors flex items-center justify-center gap-2"
 //                 >
-//                   <Download className="w-4 h-4" style={{ color: colors.darkAccent }} />
+//                   <Shield className="w-4 h-4" />
+//                   Update Health Data
 //                 </button>
 //               </div>
+//             ) : (
+//               <div className="text-center py-6">
+//                 <Shield className="w-12 h-12 mx-auto mb-3 opacity-50" style={{ color: colors.text }} />
+//                 <p className="text-gray-500">No health data yet</p>
+//                 <p className="text-xs text-gray-400 mt-1">Track your health to see insights</p>
+//                 <button 
+//                   onClick={() => navigate('/men-health')}
+//                   className="mt-4 text-sm px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+//                 >
+//                   Log Health Data
+//                 </button>
+//               </div>
+//             )}
+//           </SectionCard>
+
+//           {/* Sleep & Recovery Chart */}
+//           <SectionCard title="Sleep & Recovery" icon={<Moon className="w-5 h-5" />} color={colors.sleep}>
+//             <div className="h-48 mb-4">
+//               {trends.sleep.length > 0 ? (
+//                 <Line data={sleepChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+//               ) : (
+//                 <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+//                   No sleep data available
+//                 </div>
+//               )}
+//             </div>
+//             <div className="grid grid-cols-2 gap-4">
+//               <div className="text-center p-3 bg-gray-50 rounded-lg">
+//                 <p className="text-2xl font-bold text-purple-600">{dashboardData.sleep.avgHours || 0}h</p>
+//                 <p className="text-sm text-gray-500">Average Sleep</p>
+//               </div>
+//               <div className="text-center p-3 bg-gray-50 rounded-lg">
+//                 <p className="text-2xl font-bold text-purple-600">{dashboardData.sleep.avgQuality || 0}/10</p>
+//                 <p className="text-sm text-gray-500">Sleep Quality</p>
+//               </div>
+//             </div>
+//           </SectionCard>
+
+//           {/* Fitness & Nutrition Chart */}
+//           <SectionCard title="Fitness & Nutrition" icon={<Dumbbell className="w-5 h-5" />} color={colors.fitness}>
+//             <div className="h-48 mb-4">
+//               {trends.calories.length > 0 || trends.workouts.length > 0 ? (
+//                 <Line data={calorieChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+//               ) : (
+//                 <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+//                   No fitness or nutrition data available
+//                 </div>
+//               )}
+//             </div>
+//             <div className="grid grid-cols-2 gap-4">
+//               <div className="text-center p-3 bg-gray-50 rounded-lg">
+//                 <p className="text-2xl font-bold text-green-600">{dashboardData.fitness.totalWorkouts || 0}</p>
+//                 <p className="text-sm text-gray-500">Workouts This Week</p>
+//               </div>
+//               <div className="text-center p-3 bg-gray-50 rounded-lg">
+//                 <p className="text-2xl font-bold text-orange-600">{dashboardData.fitness.totalCalories || 0}</p>
+//                 <p className="text-sm text-gray-500">Calories Burned</p>
+//               </div>
+//             </div>
+//           </SectionCard>
+
+//           {/* Nutrition Macros */}
+//           <SectionCard title="Nutrition Overview" icon={<UtensilsCrossed className="w-5 h-5" />} color={colors.nutrition}>
+//             <div className="grid grid-cols-2 gap-4 mb-4">
+//               <div className="text-center">
+//                 <p className="text-2xl font-bold text-orange-600">{dashboardData.nutrition.avgCalories || 0}</p>
+//                 <p className="text-sm text-gray-500">Avg Daily Calories</p>
+//               </div>
+//               <div className="text-center">
+//                 <p className="text-2xl font-bold text-blue-600">{dashboardData.nutrition.totalProtein || 0}g</p>
+//                 <p className="text-sm text-gray-500">Total Protein</p>
+//               </div>
+//             </div>
+//             <div className="h-32">
+//               {dashboardData.nutrition.totalProtein > 0 || dashboardData.nutrition.totalCarbs > 0 || dashboardData.nutrition.totalFats > 0 ? (
+//                 <Doughnut data={macroChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+//               ) : (
+//                 <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+//                   No nutrition data available
+//                 </div>
+//               )}
+//             </div>
+//           </SectionCard>
+
+//           {/* Wellness Activities */}
+//           <SectionCard title="Wellness Activities" icon={<Brain className="w-5 h-5" />} color={colors.wellness}>
+//             <div className="space-y-3">
+//               <div className="flex justify-between items-center">
+//                 <span className="text-gray-500">Activities Completed</span>
+//                 <span className="text-2xl font-bold text-pink-600">{dashboardData.wellness.totalActivities || 0}</span>
+//               </div>
+//               <div className="flex justify-between items-center">
+//                 <span className="text-gray-500">Average Mood</span>
+//                 <div className="flex items-center gap-1">
+//                   {dashboardData.wellness.moodScores.length > 0 ? (
+//                     <>
+//                       <span className="text-lg">{['😢', '😐', '🙂', '😊', '😄'][Math.round(dashboardData.wellness.moodScores.reduce((a,b)=>a+b,0)/dashboardData.wellness.moodScores.length) - 1] || '🙂'}</span>
+//                       <span className="font-medium">
+//                         {Math.round(dashboardData.wellness.moodScores.reduce((a,b)=>a+b,0)/dashboardData.wellness.moodScores.length)}/5
+//                       </span>
+//                     </>
+//                   ) : (
+//                     <span className="text-gray-400">No data</span>
+//                   )}
+//                 </div>
+//               </div>
+//               <div className="mt-3 pt-3 border-t border-gray-100">
+//                 <p className="text-sm text-gray-500">Quick activities:</p>
+//                 <div className="flex gap-2 mt-2">
+//                   <button className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">Meditate</button>
+//                   <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">Journal</button>
+//                   <button className="px-3 py-1 bg-purple-50 text-purple-600 rounded-full text-sm">Stretch</button>
+//                 </div>
+//               </div>
+//             </div>
+//           </SectionCard>
+//         </div>
+
+//         {/* Community Activity */}
+//         <SectionCard title="Community Activity" icon={<Users className="w-5 h-5" />} color={colors.community}>
+//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+//             <div className="text-center p-3 bg-gray-50 rounded-lg">
+//               <p className="text-2xl font-bold text-indigo-600">{dashboardData.community.totalPosts || 0}</p>
+//               <p className="text-sm text-gray-500">Posts</p>
+//             </div>
+//             <div className="text-center p-3 bg-gray-50 rounded-lg">
+//               <p className="text-2xl font-bold text-indigo-600">{dashboardData.community.totalLikes || 0}</p>
+//               <p className="text-sm text-gray-500">Likes Received</p>
+//             </div>
+//             <div className="text-center p-3 bg-gray-50 rounded-lg">
+//               <p className="text-2xl font-bold text-indigo-600">{dashboardData.community.totalComments || 0}</p>
+//               <p className="text-sm text-gray-500">Comments</p>
 //             </div>
 //           </div>
-//         </div>
-//       )}
+//           <button 
+//             onClick={() => navigate('/community')}
+//             className="w-full py-2 rounded-lg border-2 border-indigo-200 text-indigo-600 font-medium hover:bg-indigo-50 transition-colors"
+//           >
+//             Go to Community
+//           </button>
+//         </SectionCard>
+
+//         {/* Recent Activity Feed */}
+//         <SectionCard title="Recent Activity" icon={<Clock className="w-5 h-5" />} color={colors.primary}>
+//           <div className="space-y-3">
+//             {dashboardData.recentActivity.length > 0 ? (
+//               dashboardData.recentActivity.slice(0, 5).map((activity, idx) => (
+//                 <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+//                   <div className="p-2 bg-white rounded-lg shadow-sm">
+//                     {activity.icon}
+//                   </div>
+//                   <div className="flex-1">
+//                     <p className="font-medium text-gray-800">{activity.title}</p>
+//                     <p className="text-sm text-gray-500">{activity.description}</p>
+//                   </div>
+//                   <span className="text-xs text-gray-400">{formatTimeAgo(activity.time)}</span>
+//                 </div>
+//               ))
+//             ) : (
+//               <div className="text-center py-6">
+//                 <Activity className="w-12 h-12 mx-auto mb-3 opacity-50" style={{ color: colors.text }} />
+//                 <p className="text-gray-500">No recent activity</p>
+//                 <p className="text-sm text-gray-400">Start tracking your health to see activity here</p>
+//               </div>
+//             )}
+//           </div>
+//         </SectionCard>
+//       </div>
 //     </div>
 //   );
 // };
 
-// export default LabInsightsDashboard;
+// export default LabInsights;
+
+
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 import {
-  BarChart3,
-  Download,
-  FileText,
+  Apple,
+  Flame,
+  Heart,
   Moon,
   Dumbbell,
-  Heart,
   Users,
   Brain,
-  Clock,
-  Activity,
-  TrendingUp,
   Calendar,
-  RefreshCw,
-  AlertCircle,
-  Shield,
+  TrendingUp,
+  Activity,
   Droplets,
-  Thermometer,
-  ActivitySquare
+  Shield,
+  UtensilsCrossed,
+  MessageCircle,
+  Clock,
+  AlertCircle,
+  BarChart3,
+  Download,
+  CheckCircle,
+  XCircle,
+  Baby,
+  Stethoscope,
+  Sparkles
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import {
@@ -1650,9 +1398,10 @@ import {
   Legend,
   ArcElement,
   PointElement,
-  LineElement
+  LineElement,
+  Filler
 } from 'chart.js';
-import { Bar, Line } from 'react-chartjs-2';
+import { Line, Doughnut } from 'react-chartjs-2';
 
 // Register ChartJS components
 ChartJS.register(
@@ -1664,109 +1413,680 @@ ChartJS.register(
   Legend,
   ArcElement,
   PointElement,
-  LineElement
+  LineElement,
+  Filler
 );
 
+// Custom Toast Components
+const SuccessToast = ({ message, description }) => (
+  <div className="bg-white/95 backdrop-blur-lg rounded-xl p-4 shadow-2xl border border-green-200 flex items-center gap-3 min-w-[280px]">
+    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center flex-shrink-0">
+      <CheckCircle className="w-5 h-5 text-white" />
+    </div>
+    <div>
+      <p className="font-bold text-gray-800 text-sm">{message}</p>
+      <p className="text-xs text-gray-600">{description}</p>
+    </div>
+  </div>
+);
+
+const ErrorToast = ({ message, description }) => (
+  <div className="bg-white/95 backdrop-blur-lg rounded-xl p-4 shadow-2xl border border-red-200 flex items-center gap-3 min-w-[280px]">
+    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-400 to-red-500 flex items-center justify-center flex-shrink-0">
+      <XCircle className="w-5 h-5 text-white" />
+    </div>
+    <div>
+      <p className="font-bold text-gray-800 text-sm">{message}</p>
+      <p className="text-xs text-gray-600">{description}</p>
+    </div>
+  </div>
+);
+
+// Helper function to calculate sleep duration from start and end times
+const calculateSleepDuration = (sleepStart, sleepEnd) => {
+  if (!sleepStart || !sleepEnd) return 0;
+  try {
+    const start = new Date(`2000-01-01T${sleepStart}`);
+    const end = new Date(`2000-01-01T${sleepEnd}`);
+    let diff = (end - start) / (1000 * 60 * 60);
+    if (diff < 0) diff += 24;
+    return diff;
+  } catch {
+    return 0;
+  }
+};
+
+// Helper function to calculate pregnancy weeks
+const calculatePregnancyWeeks = (conceptionDate) => {
+  if (!conceptionDate) return 0;
+  const today = new Date();
+  const conception = new Date(conceptionDate);
+  const diffTime = Math.abs(today - conception);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const weeks = Math.floor(diffDays / 7);
+  return Math.max(1, Math.min(42, weeks));
+};
+
+// Helper function to determine trimester
+const getTrimester = (weeks) => {
+  if (weeks <= 12) return 'First Trimester (1-12 weeks)';
+  if (weeks <= 28) return 'Second Trimester (13-28 weeks)';
+  return 'Third Trimester (29-40 weeks)';
+};
+
+// Helper function to calculate due date
+const calculateDueDate = (conceptionDate) => {
+  if (!conceptionDate) return null;
+  const due = new Date(conceptionDate);
+  due.setDate(due.getDate() + 280); // 40 weeks
+  return due;
+};
+
 const LabInsights = () => {
-  const [dashboardData, setDashboardData] = useState(null);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [generatingReport, setGeneratingReport] = useState(false);
-  const [activeTab, setActiveTab] = useState('weekly');
-  const [insights, setInsights] = useState([]);
-  const [activityStats, setActivityStats] = useState(null);
-  const [error, setError] = useState(null);
-  const [sleepData, setSleepData] = useState([]);
+  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [dashboardData, setDashboardData] = useState({
+    femaleHealth: {
+      hasData: false,
+      lastCycle: null,
+      cycleLength: 28,
+      nextCycle: null,
+      ovulationWindow: null,
+      pregnancy: {
+        hasData: false,
+        isPregnant: false,
+        dueDate: null,
+        trimester: null,
+        weeksPregnant: 0,
+        startDate: null,
+        conceptionDate: null
+      }
+    },
+    menHealth: {
+      hasData: false,
+      lastCheckup: null,
+      healthStatus: 'Good',
+      averageStress: 0,
+      averageEnergy: 0,
+      averageSleep: 0,
+      workoutDays: 0,
+      recentMoods: [],
+      healthScore: 0
+    },
+    sleep: {
+      records: [],
+      avgHours: 0,
+      avgQuality: 0,
+      totalHours: 0
+    },
+    fitness: {
+      records: [],
+      totalWorkouts: 0,
+      totalDuration: 0,
+      totalCalories: 0
+    },
+    nutrition: {
+      records: [],
+      totalCalories: 0,
+      avgCalories: 0,
+      totalProtein: 0,
+      totalCarbs: 0,
+      totalFats: 0
+    },
+    wellness: {
+      activities: [],
+      totalActivities: 0,
+      moodScores: []
+    },
+    community: {
+      posts: [],
+      totalPosts: 0,
+      totalLikes: 0,
+      totalComments: 0
+    },
+    recentActivity: []
+  });
 
-  // Color palette from your specifications
+  const [weeklyStats, setWeeklyStats] = useState({
+    workouts: 0,
+    caloriesBurned: 0,
+    sleepHours: 0,
+    sleepQuality: 0,
+    caloriesEaten: 0,
+    proteinEaten: 0,
+    communityPosts: 0
+  });
+
+  const [trends, setTrends] = useState({
+    sleep: [],
+    calories: [],
+    workouts: []
+  });
+
   const colors = {
     background: '#F4F1E9',
     primary: '#B1D182',
     text: '#0B132B',
     accent: '#688F48',
     lightAccent: '#E8F4D9',
-    darkAccent: '#4A6B33',
     card: '#FFFFFF',
-    success: '#4CAF50',
-    warning: '#FF9800',
-    error: '#F44336',
-    info: '#2196F3',
-    sleep: '#3B82F6',
+    female: '#EF4444',
+    male: '#3B82F6',
+    sleep: '#8B5CF6',
     fitness: '#10B981',
     nutrition: '#F59E0B',
-    selfcare: '#8B5CF6',
-    community: '#EC4899',
-    femaleHealth: '#EF4444',
-    menHealth: '#6366F1'
+    wellness: '#EC4899',
+    community: '#6366F1',
+    pregnancy: '#EC4899'
   };
 
+  // Get user from localStorage
   useEffect(() => {
-    fetchDashboardData();
-    fetchRecentInsights();
-    fetchActivityStatsData();
-    fetchSleepHistory();
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+        setUserId(parsedUser._id || parsedUser.id);
+        console.log('✅ User loaded:', parsedUser.name);
+      } catch (e) {
+        console.error('Error parsing user:', e);
+      }
+    }
   }, []);
 
-  const fetchDashboardData = async () => {
+  useEffect(() => {
+    if (userId) {
+      fetchAllData();
+    }
+  }, [userId]);
+
+  const fetchAllData = async () => {
+    if (!userId) {
+      console.log('No user ID found');
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
     try {
-      setLoading(true);
-      const data = await apiService.getDashboardInsights();
-      setDashboardData(data);
-      setError(null);
-    } catch (err) {
-      console.error('Dashboard fetch error:', err);
-      setError('Failed to load dashboard data. Please try again.');
+      console.log('📡 Fetching dashboard data for user:', userId);
+
+      const [
+        cycles,
+        sleepRecords,
+        fitnessRecords,
+        nutritionRecords,
+        wellnessActivities,
+        communityPosts,
+        menHealthRecords,
+        pregnancyRecords
+      ] = await Promise.allSettled([
+        apiService.getCycles(userId).catch(() => null),
+        apiService.getSleepHistory().catch(() => []),
+        apiService.getAllFitness().catch(() => []),
+        apiService.getAllNutrition().catch(() => []),
+        apiService.fetchAllSelfCareActivities().catch(() => []),
+        apiService.getCommunityPosts().catch(() => ({ data: [] })),
+        apiService.listRecordsHandler().catch(() => []),
+        apiService.getPregnancy(userId).catch(() => null)
+      ]);
+
+      console.log('📊 Data fetched:', {
+        cycles: cycles.status,
+        sleep: sleepRecords.status,
+        fitness: fitnessRecords.status,
+        nutrition: nutritionRecords.status,
+        wellness: wellnessActivities.status,
+        community: communityPosts.status,
+        menHealth: menHealthRecords.status,
+        pregnancy: pregnancyRecords.status
+      });
+
+      // Process cycles data
+      let cyclesData = [];
+      let analysis = {};
+      
+      if (cycles.status === 'fulfilled' && cycles.value) {
+        const cycleResponse = cycles.value;
+        if (cycleResponse.data && cycleResponse.data.data) {
+          cyclesData = cycleResponse.data.data || [];
+          analysis = cycleResponse.data.analysis || {};
+        } else if (cycleResponse.data && cycleResponse.data.cycles) {
+          cyclesData = cycleResponse.data.cycles || [];
+          analysis = cycleResponse.data.analysis || {};
+        } else if (cycleResponse.data && Array.isArray(cycleResponse.data)) {
+          cyclesData = cycleResponse.data;
+        }
+      }
+      
+      if (cyclesData.length > 0) {
+        const lastCycle = cyclesData[0];
+        const cycleLength = analysis.averageLength || 28;
+        const nextCycleDate = analysis.predictedNext || new Date(new Date(lastCycle.startDate).getTime() + (cycleLength * 24 * 60 * 60 * 1000));
+        
+        const ovulationStart = new Date(nextCycleDate);
+        ovulationStart.setDate(ovulationStart.getDate() - 18);
+        const ovulationEnd = new Date(nextCycleDate);
+        ovulationEnd.setDate(ovulationEnd.getDate() - 10);
+        
+        setDashboardData(prev => ({
+          ...prev,
+          femaleHealth: {
+            ...prev.femaleHealth,
+            hasData: true,
+            lastCycle: lastCycle,
+            cycleLength: cycleLength,
+            nextCycle: nextCycleDate,
+            ovulationWindow: { start: ovulationStart, end: ovulationEnd }
+          }
+        }));
+      }
+
+      // Process Pregnancy data - SMART CALCULATION
+      let pregnancyData = null;
+      if (pregnancyRecords.status === 'fulfilled' && pregnancyRecords.value) {
+        const pregResponse = pregnancyRecords.value;
+        console.log('📊 Pregnancy raw response:', pregResponse);
+        
+        if (pregResponse.success && pregResponse.record) {
+          pregnancyData = pregResponse.record;
+        } else if (pregResponse.record) {
+          pregnancyData = pregResponse.record;
+        } else if (pregResponse.data && pregResponse.data.record) {
+          pregnancyData = pregResponse.data.record;
+        } else if (pregResponse.data) {
+          pregnancyData = pregResponse.data;
+        }
+      }
+      
+      console.log('📊 Pregnancy data extracted:', pregnancyData);
+      
+      if (pregnancyData) {
+        const conceptionDate = pregnancyData.conceptionDate ? new Date(pregnancyData.conceptionDate) : null;
+        
+        // SMART CALCULATION: Calculate weeks based on current date
+        let weeksPregnant = 0;
+        let dueDate = pregnancyData.dueDate ? new Date(pregnancyData.dueDate) : null;
+        let trimester = null;
+        
+        if (conceptionDate) {
+          weeksPregnant = calculatePregnancyWeeks(conceptionDate);
+          trimester = getTrimester(weeksPregnant);
+          
+          // Calculate due date if not present
+          if (!dueDate) {
+            dueDate = calculateDueDate(conceptionDate);
+          }
+        } else if (dueDate) {
+          // Calculate weeks from due date
+          const today = new Date();
+          const diffTime = Math.abs(dueDate - today);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          weeksPregnant = 40 - Math.floor(diffDays / 7);
+          if (weeksPregnant < 1) weeksPregnant = 1;
+          if (weeksPregnant > 42) weeksPregnant = 42;
+          trimester = getTrimester(weeksPregnant);
+        }
+        
+        console.log(`📊 SMART PREGNANCY CALC: Conception: ${conceptionDate?.toDateString()}, Today: ${new Date().toDateString()}, Weeks: ${weeksPregnant}, Trimester: ${trimester}`);
+        
+        setDashboardData(prev => ({
+          ...prev,
+          femaleHealth: {
+            ...prev.femaleHealth,
+            pregnancy: {
+              hasData: true,
+              isPregnant: true,
+              dueDate: dueDate,
+              conceptionDate: conceptionDate,
+              trimester: trimester,
+              weeksPregnant: weeksPregnant,
+              startDate: conceptionDate
+            }
+          }
+        }));
+      }
+
+      // Process sleep data
+      let sleepRecordsData = [];
+      if (sleepRecords.status === 'fulfilled' && sleepRecords.value) {
+        if (Array.isArray(sleepRecords.value)) {
+          sleepRecordsData = sleepRecords.value;
+        } else if (sleepRecords.value.data && Array.isArray(sleepRecords.value.data)) {
+          sleepRecordsData = sleepRecords.value.data;
+        }
+      }
+      
+      if (sleepRecordsData.length > 0) {
+        const last7Days = sleepRecordsData.slice(-7);
+        let totalHours = 0;
+        let totalQuality = 0;
+        let qualityCount = 0;
+        const sleepDurations = [];
+        
+        last7Days.forEach(record => {
+          const duration = calculateSleepDuration(record.sleepStart, record.sleepEnd);
+          totalHours += duration;
+          sleepDurations.push(duration);
+          
+          if (record.sleepQuality) {
+            totalQuality += record.sleepQuality;
+            qualityCount++;
+          }
+        });
+        
+        const avgHours = last7Days.length > 0 ? parseFloat((totalHours / last7Days.length).toFixed(1)) : 0;
+        const avgQuality = qualityCount > 0 ? parseFloat((totalQuality / qualityCount).toFixed(1)) : 0;
+        
+        setDashboardData(prev => ({
+          ...prev,
+          sleep: {
+            records: sleepRecordsData,
+            avgHours: avgHours,
+            avgQuality: avgQuality,
+            totalHours: totalHours
+          }
+        }));
+        
+        setTrends(prev => ({
+          ...prev,
+          sleep: sleepDurations
+        }));
+        
+        setWeeklyStats(prev => ({
+          ...prev,
+          sleepHours: totalHours,
+          sleepQuality: avgQuality
+        }));
+      }
+
+      // Process fitness data
+      const fitnessData = fitnessRecords.value || [];
+      if (fitnessData.length > 0) {
+        const last7Days = fitnessData.slice(-7);
+        const totalWorkouts = last7Days.length;
+        const totalCalories = last7Days.reduce((sum, r) => sum + (r.caloriesBurned || (r.duration * 5) || 0), 0);
+        
+        setDashboardData(prev => ({
+          ...prev,
+          fitness: {
+            records: fitnessData,
+            totalWorkouts: totalWorkouts,
+            totalDuration: last7Days.reduce((sum, r) => sum + (r.duration || 0), 0),
+            totalCalories: totalCalories
+          }
+        }));
+        
+        setWeeklyStats(prev => ({
+          ...prev,
+          workouts: totalWorkouts,
+          caloriesBurned: totalCalories
+        }));
+        
+        setTrends(prev => ({
+          ...prev,
+          workouts: last7Days.map(r => r.duration || 0)
+        }));
+      }
+
+      // Process nutrition data
+      const nutritionData = nutritionRecords.value || [];
+      if (nutritionData.length > 0) {
+        const last7Days = nutritionData.slice(-7);
+        const totalCalories = last7Days.reduce((sum, r) => sum + (parseInt(r.calories) || 0), 0);
+        const totalProtein = last7Days.reduce((sum, r) => sum + (parseInt(r.protein) || 0), 0);
+        const totalCarbs = last7Days.reduce((sum, r) => sum + (parseInt(r.carbs) || 0), 0);
+        const totalFats = last7Days.reduce((sum, r) => sum + (parseInt(r.fats) || 0), 0);
+        
+        setDashboardData(prev => ({
+          ...prev,
+          nutrition: {
+            records: nutritionData,
+            totalCalories: totalCalories,
+            avgCalories: Math.round(totalCalories / (last7Days.length || 1)),
+            totalProtein: totalProtein,
+            totalCarbs: totalCarbs,
+            totalFats: totalFats
+          }
+        }));
+        
+        setWeeklyStats(prev => ({
+          ...prev,
+          caloriesEaten: totalCalories,
+          proteinEaten: totalProtein
+        }));
+        
+        setTrends(prev => ({
+          ...prev,
+          calories: last7Days.map(r => parseInt(r.calories) || 0)
+        }));
+      }
+
+      // Process wellness activities
+      let wellnessData = [];
+      if (wellnessActivities.status === 'fulfilled' && wellnessActivities.value) {
+        if (Array.isArray(wellnessActivities.value)) {
+          wellnessData = wellnessActivities.value;
+        } else if (wellnessActivities.value.data && Array.isArray(wellnessActivities.value.data)) {
+          wellnessData = wellnessActivities.value.data;
+        }
+      }
+      
+      if (wellnessData.length > 0) {
+        setDashboardData(prev => ({
+          ...prev,
+          wellness: {
+            activities: wellnessData,
+            totalActivities: wellnessData.length,
+            moodScores: wellnessData.map(w => w.moodScore || 5)
+          }
+        }));
+      }
+
+      // Process community data
+      let communityData = [];
+      if (communityPosts.status === 'fulfilled' && communityPosts.value) {
+        if (communityPosts.value.data && Array.isArray(communityPosts.value.data)) {
+          communityData = communityPosts.value.data;
+        } else if (Array.isArray(communityPosts.value)) {
+          communityData = communityPosts.value;
+        } else if (communityPosts.value.success && Array.isArray(communityPosts.value.data)) {
+          communityData = communityPosts.value.data;
+        }
+      }
+      
+      console.log('📊 Community posts found:', communityData.length);
+      
+      if (communityData.length > 0) {
+        const totalLikes = communityData.reduce((sum, p) => sum + (p.likesCount || p.likes?.length || 0), 0);
+        const totalComments = communityData.reduce((sum, p) => sum + (p.comments?.length || 0), 0);
+        
+        setDashboardData(prev => ({
+          ...prev,
+          community: {
+            posts: communityData,
+            totalPosts: communityData.length,
+            totalLikes: totalLikes,
+            totalComments: totalComments
+          }
+        }));
+        
+        setWeeklyStats(prev => ({
+          ...prev,
+          communityPosts: communityData.length
+        }));
+      }
+
+      // Process Men's Health data
+      let menHealthData = [];
+      if (menHealthRecords.status === 'fulfilled' && menHealthRecords.value) {
+        if (menHealthRecords.value.records && Array.isArray(menHealthRecords.value.records)) {
+          menHealthData = menHealthRecords.value.records;
+        } else if (menHealthRecords.value.data && Array.isArray(menHealthRecords.value.data)) {
+          menHealthData = menHealthRecords.value.data;
+        } else if (Array.isArray(menHealthRecords.value)) {
+          menHealthData = menHealthRecords.value;
+        }
+      }
+      
+      if (menHealthData.length > 0) {
+        const recentEntries = menHealthData.slice(-7);
+        const totalStress = recentEntries.reduce((sum, r) => sum + (r.stressLevel || 5), 0);
+        const totalEnergy = recentEntries.reduce((sum, r) => sum + (r.energyLevel || 5), 0);
+        const totalSleep = recentEntries.reduce((sum, r) => sum + (r.sleepHours || 7), 0);
+        const totalWorkouts = recentEntries.reduce((sum, r) => sum + (r.workoutDays || 3), 0);
+        
+        const avgStress = recentEntries.length > 0 ? parseFloat((totalStress / recentEntries.length).toFixed(1)) : 0;
+        const avgEnergy = recentEntries.length > 0 ? parseFloat((totalEnergy / recentEntries.length).toFixed(1)) : 0;
+        const avgSleep = recentEntries.length > 0 ? parseFloat((totalSleep / recentEntries.length).toFixed(1)) : 0;
+        const avgWorkouts = recentEntries.length > 0 ? parseFloat((totalWorkouts / recentEntries.length).toFixed(1)) : 0;
+        
+        let healthScore = 0;
+        if (avgStress <= 3) healthScore += 30;
+        else if (avgStress <= 6) healthScore += 20;
+        else healthScore += 10;
+        
+        if (avgSleep >= 7 && avgSleep <= 9) healthScore += 25;
+        else if (avgSleep >= 6) healthScore += 15;
+        else healthScore += 5;
+        
+        if (avgWorkouts >= 4) healthScore += 25;
+        else if (avgWorkouts >= 2) healthScore += 15;
+        else healthScore += 5;
+        
+        if (avgEnergy >= 8) healthScore += 20;
+        else if (avgEnergy >= 5) healthScore += 10;
+        else healthScore += 5;
+        
+        let healthStatus = 'Good';
+        if (healthScore >= 80) healthStatus = 'Excellent';
+        else if (healthScore >= 60) healthStatus = 'Good';
+        else if (healthScore >= 40) healthStatus = 'Fair';
+        else healthStatus = 'Needs Attention';
+        
+        const recentMoods = recentEntries.map(r => {
+          if (r.stressLevel > 7) return 'stressed';
+          if (r.energyLevel < 4) return 'tired';
+          if (r.sleepHours < 6) return 'sleep-deprived';
+          return 'balanced';
+        });
+        
+        setDashboardData(prev => ({
+          ...prev,
+          menHealth: {
+            hasData: true,
+            lastCheckup: recentEntries[0]?.createdAt || null,
+            healthStatus: healthStatus,
+            averageStress: avgStress,
+            averageEnergy: avgEnergy,
+            averageSleep: avgSleep,
+            workoutDays: avgWorkouts,
+            recentMoods: recentMoods,
+            healthScore: healthScore
+          }
+        }));
+      }
+
+      // Build recent activity feed
+      const activities = [];
+      
+      if (fitnessData.length > 0) {
+        fitnessData.slice(0, 3).forEach(f => {
+          activities.push({
+            type: 'fitness',
+            title: 'Workout',
+            description: `${f.activityType || 'Exercise'} - ${f.duration || 0} mins`,
+            time: f.createdAt,
+            icon: <Dumbbell className="w-4 h-4" />
+          });
+        });
+      }
+      
+      if (nutritionData.length > 0) {
+        nutritionData.slice(0, 3).forEach(n => {
+          activities.push({
+            type: 'nutrition',
+            title: 'Meal Logged',
+            description: `${n.meal || 'Meal'} - ${n.calories} kcal`,
+            time: n.createdAt,
+            icon: <UtensilsCrossed className="w-4 h-4" />
+          });
+        });
+      }
+      
+      if (sleepRecordsData.length > 0) {
+        sleepRecordsData.slice(0, 3).forEach(s => {
+          const duration = calculateSleepDuration(s.sleepStart, s.sleepEnd);
+          activities.push({
+            type: 'sleep',
+            title: 'Sleep Recorded',
+            description: `${duration.toFixed(1)} hours - Quality: ${s.sleepQuality || 0}/10`,
+            time: s.createdAt,
+            icon: <Moon className="w-4 h-4" />
+          });
+        });
+      }
+      
+      if (communityData.length > 0) {
+        communityData.slice(0, 3).forEach(p => {
+          activities.push({
+            type: 'community',
+            title: 'Community Post',
+            description: p.content?.substring(0, 50) + (p.content?.length > 50 ? '...' : ''),
+            time: p.createdAt,
+            icon: <MessageCircle className="w-4 h-4" />
+          });
+        });
+      }
+      
+      activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+      setDashboardData(prev => ({
+        ...prev,
+        recentActivity: activities.slice(0, 10)
+      }));
+
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      toast.custom((t) => (
+        <ErrorToast
+          message="Data Load Error"
+          description="Failed to load dashboard data. Please refresh."
+        />
+      ), { duration: 4000 });
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchRecentInsights = async () => {
-    try {
-      const data = await apiService.fetchInsights();
-      setInsights(Array.isArray(data) ? data.slice(0, 5) : []);
-    } catch (err) {
-      console.error('Insights fetch error:', err);
-    }
-  };
-
-  const fetchActivityStatsData = async () => {
-    try {
-      const response = await apiService.getActivityStats();
-      if (response.success) {
-        setActivityStats(response);
+  const handleDownloadReport = async () => {
+    const loadingToast = toast.loading(
+      <div className="flex items-center gap-2">
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        <span>Generating your weekly health report...</span>
+      </div>,
+      {
+        style: {
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: '#fff',
+          borderRadius: '12px',
+          padding: '12px 20px',
+        },
+        duration: Infinity
       }
-    } catch (err) {
-      console.error('Activity stats fetch error:', err);
-    }
-  };
+    );
 
-  const fetchSleepHistory = async () => {
-    try {
-      const data = await apiService.getSleepHistory();
-      if (Array.isArray(data)) {
-        setSleepData(data.slice(0, 7)); // Last 7 days
-      }
-    } catch (err) {
-      console.error('Sleep history fetch error:', err);
-    }
-  };
-
-  const handleGenerateReport = async () => {
     try {
       setGeneratingReport(true);
-      setError(null);
-      
-      // First generate the report
       const response = await apiService.generateWeeklyReport();
       
       if (response.success && response.downloadUrl) {
-        // Extract filename from download URL
         const filename = response.downloadUrl.split('/').pop();
-        
-        // Download the report
         const downloadResponse = await apiService.downloadWeeklyReport(filename);
         
-        // Create blob and trigger download
         const blob = new Blob([downloadResponse.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -1777,305 +2097,184 @@ const LabInsights = () => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
         
-        // Refresh dashboard data
-        fetchDashboardData();
+        toast.dismiss(loadingToast);
+        toast.custom((t) => (
+          <SuccessToast
+            message="Weekly Report Downloaded!"
+            description="Your health report has been saved to your device"
+          />
+        ), { duration: 5000 });
+        
       } else {
-        setError(response.message || 'Failed to generate report');
+        toast.dismiss(loadingToast);
+        toast.custom((t) => (
+          <ErrorToast
+            message="Report Generation Failed"
+            description={response.message || 'Unable to generate report. Please try again.'}
+          />
+        ), { duration: 5000 });
       }
-    } catch (err) {
-      console.error('Report generation error:', err);
-      setError('Failed to generate report. Please try again.');
+    } catch (error) {
+      console.error('Error downloading report:', error);
+      toast.dismiss(loadingToast);
+      toast.custom((t) => (
+        <ErrorToast
+          message="Download Failed"
+          description="Something went wrong. Please try again later."
+        />
+      ), { duration: 5000 });
     } finally {
       setGeneratingReport(false);
     }
   };
 
-  const handleRefresh = () => {
-    fetchDashboardData();
-    fetchRecentInsights();
-    fetchActivityStatsData();
-    fetchSleepHistory();
-  };
-
-  const handleGenerateInsight = async (category) => {
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
     try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await apiService.collectRealData(category);
-      
-      if (response.success) {
-        // Refresh all data
-        fetchDashboardData();
-        fetchRecentInsights();
-        fetchActivityStatsData();
-      } else {
-        setError(response.message || `Failed to generate ${category} insight`);
-      }
-    } catch (err) {
-      console.error('Insight generation error:', err);
-      setError(`Failed to generate ${category} insight`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGenerateAllTimeInsight = async (category) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await apiService.collectAllTimeData(category);
-      
-      if (response.success) {
-        fetchDashboardData();
-        fetchRecentInsights();
-      } else {
-        setError(response.message || `Failed to generate all-time ${category} insight`);
-      }
-    } catch (err) {
-      console.error('All-time insight generation error:', err);
-      setError(`Failed to generate all-time ${category} insight`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
+      return new Date(date).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric'
       });
     } catch {
-      return dateString;
+      return 'N/A';
     }
   };
 
-  const getCategoryIcon = (category) => {
-    switch(category?.toLowerCase()) {
-      case 'sleeprecovery':
-      case 'sleep':
-        return <Moon className="w-5 h-5" />;
-      case 'fitness':
-        return <Dumbbell className="w-5 h-5" />;
-      case 'nutrition':
-        return <Heart className="w-5 h-5" />;
-      case 'selfcare':
-      case 'self-care':
-        return <Brain className="w-5 h-5" />;
-      case 'community':
-        return <Users className="w-5 h-5" />;
-      case 'femalehealth':
-        return <Droplets className="w-5 h-5" />;
-      case 'menhealth':
-        return <Shield className="w-5 h-5" />;
-      case 'blood-test':
-        return <Thermometer className="w-5 h-5" />;
-      default:
-        return <Activity className="w-5 h-5" />;
-    }
-  };
-
-  const getCategoryColor = (category) => {
-    switch(category?.toLowerCase()) {
-      case 'sleeprecovery':
-      case 'sleep':
-        return colors.sleep;
-      case 'fitness':
-        return colors.fitness;
-      case 'nutrition':
-        return colors.nutrition;
-      case 'selfcare':
-      case 'self-care':
-        return colors.selfcare;
-      case 'community':
-        return colors.community;
-      case 'femalehealth':
-        return colors.femaleHealth;
-      case 'menhealth':
-        return colors.menHealth;
-      case 'blood-test':
-        return colors.error;
-      default:
-        return colors.text;
-    }
-  };
-
-  const getCategoryDisplayName = (category) => {
-    switch(category?.toLowerCase()) {
-      case 'sleeprecovery':
-        return 'Sleep Recovery';
-      case 'selfcare':
-        return 'Self Care';
-      case 'femalehealth':
-        return 'Female Health';
-      case 'menhealth':
-        return 'Men Health';
-      case 'blood-test':
-        return 'Blood Test';
-      default:
-        return category?.charAt(0).toUpperCase() + category?.slice(1) || 'Unknown';
-    }
-  };
-
-  // Prepare real chart data from backend
-  const prepareWeeklyChartData = () => {
-    if (!dashboardData?.weeklySummary) return null;
+  const formatTimeAgo = (date) => {
+    if (!date) return '';
+    const now = new Date();
+    const then = new Date(date);
+    const diffMs = now - then;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
     
-    return {
-      labels: ['Sleep Hours', 'Workouts', 'Self-Care', 'Community Posts'],
-      datasets: [
-        {
-          label: 'This Week',
-          data: [
-            dashboardData.weeklySummary.totalSleepHours || 0,
-            dashboardData.weeklySummary.totalWorkouts || 0,
-            dashboardData.weeklySummary.totalSelfCare || 0,
-            dashboardData.weeklySummary.totalPosts || 0
-          ],
-          backgroundColor: [
-            colors.sleep,
-            colors.fitness,
-            colors.selfcare,
-            colors.community
-          ],
-          borderColor: [
-            colors.sleep,
-            colors.fitness,
-            colors.selfcare,
-            colors.community
-          ],
-          borderWidth: 1
-        }
-      ]
-    };
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   };
 
-  const prepareSleepQualityChartData = () => {
-    if (!sleepData.length) return null;
-    
-    const last7Days = sleepData.slice(-7);
-    return {
-      labels: last7Days.map((_, index) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (6 - index));
-        return date.toLocaleDateString('en-US', { weekday: 'short' });
-      }),
-      datasets: [
-        {
-          label: 'Sleep Quality',
-          data: last7Days.map(record => record.sleepQuality || record.quality || 0),
-          borderColor: colors.sleep,
-          backgroundColor: `${colors.sleep}20`,
-          tension: 0.4,
-          fill: true
-        }
-      ]
-    };
-  };
-
-  const prepareActivityTrendData = () => {
-    if (!activityStats?.recordCounts) return null;
-    
-    // This would ideally come from historical data, but we'll use current stats
-    return {
-      labels: ['Sleep', 'Fitness', 'Nutrition', 'Self-Care', 'Community'],
-      datasets: [
-        {
-          label: 'Activity Records',
-          data: [
-            activityStats.recordCounts.sleep || 0,
-            activityStats.recordCounts.fitness || 0,
-            activityStats.recordCounts.nutrition || 0,
-            activityStats.recordCounts.selfCare || 0,
-            activityStats.recordCounts.community || 0
-          ],
-          backgroundColor: [
-            colors.sleep,
-            colors.fitness,
-            colors.nutrition,
-            colors.selfcare,
-            colors.community
-          ]
-        }
-      ]
-    };
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          color: colors.text,
-          font: {
-            size: 12
-          }
-        }
-      },
-      tooltip: {
-        backgroundColor: colors.card,
-        titleColor: colors.text,
-        bodyColor: colors.text,
-        borderColor: colors.text + '20',
-        borderWidth: 1
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: colors.text + '10'
-        },
-        ticks: {
-          color: colors.text + '80'
-        }
-      },
-      x: {
-        grid: {
-          color: colors.text + '10'
-        },
-        ticks: {
-          color: colors.text + '80'
-        }
-      }
+  const getHealthStatusColor = (status) => {
+    switch(status) {
+      case 'Excellent': return 'text-green-600 bg-green-100';
+      case 'Good': return 'text-blue-600 bg-blue-100';
+      case 'Fair': return 'text-yellow-600 bg-yellow-100';
+      case 'Needs Attention': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
-  const lineChartOptions = {
-    ...chartOptions,
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 10,
-        grid: {
-          color: colors.text + '10'
-        },
-        ticks: {
-          color: colors.text + '80'
-        }
-      },
-      x: {
-        grid: {
-          color: colors.text + '10'
-        },
-        ticks: {
-          color: colors.text + '80'
-        }
-      }
+  const getMoodEmoji = (mood) => {
+    switch(mood) {
+      case 'stressed': return '😰';
+      case 'tired': return '😴';
+      case 'sleep-deprived': return '😫';
+      default: return '😊';
     }
   };
 
-  if (loading && !dashboardData) {
+  const sleepChartData = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [{
+      label: 'Sleep Hours',
+      data: trends.sleep.length === 7 ? trends.sleep : [],
+      borderColor: colors.sleep,
+      backgroundColor: `${colors.sleep}20`,
+      tension: 0.4,
+      fill: true
+    }]
+  };
+
+  const calorieChartData = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [
+      {
+        label: 'Calories Eaten',
+        data: trends.calories.length === 7 ? trends.calories : [],
+        borderColor: colors.nutrition,
+        backgroundColor: `${colors.nutrition}20`,
+        tension: 0.4
+      },
+      {
+        label: 'Calories Burned',
+        data: trends.workouts.length === 7 ? trends.workouts.map(w => w * 100) : [],
+        borderColor: colors.fitness,
+        backgroundColor: `${colors.fitness}20`,
+        tension: 0.4
+      }
+    ]
+  };
+
+  const macroChartData = {
+    labels: ['Protein', 'Carbs', 'Fats'],
+    datasets: [{
+      data: [
+        dashboardData.nutrition.totalProtein,
+        dashboardData.nutrition.totalCarbs,
+        dashboardData.nutrition.totalFats
+      ],
+      backgroundColor: [colors.fitness, colors.nutrition, colors.wellness],
+      borderWidth: 0
+    }]
+  };
+
+  const StatCard = ({ title, value, unit, icon, color, trend }) => (
+    <motion.div
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100"
+    >
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-gray-500 text-sm font-medium">{title}</p>
+          <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
+            {value}{unit && <span className="text-sm ml-1 text-gray-400">{unit}</span>}
+          </p>
+          {trend && (
+            <div className="flex items-center gap-1 mt-2">
+              {trend > 0 ? (
+                <TrendingUp className="w-3 h-3 text-green-500" />
+              ) : (
+                <TrendingUp className="w-3 h-3 text-red-500 rotate-180" />
+              )}
+              <span className={`text-xs ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {Math.abs(trend)}% from last week
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="p-3 rounded-xl" style={{ backgroundColor: `${color}15` }}>
+          <div style={{ color }}>{icon}</div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const SectionCard = ({ title, icon, color, children }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
+    >
+      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+        <div className="p-2 rounded-lg" style={{ backgroundColor: `${color}15` }}>
+          <div style={{ color }}>{icon}</div>
+        </div>
+        <h2 className="text-lg font-semibold" style={{ color: colors.text }}>{title}</h2>
+      </div>
+      <div className="p-5">
+        {children}
+      </div>
+    </motion.div>
+  );
+
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: colors.accent }}></div>
-          <p style={{ color: colors.text }}>Loading your wellness dashboard...</p>
+          <p style={{ color: colors.text }}>Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -2083,499 +2282,472 @@ const LabInsights = () => {
 
   return (
     <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <Toaster 
+        position="top-right"
+        containerStyle={{
+          top: 20,
+          right: 20,
+          zIndex: 9999,
+        }}
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'transparent',
+            boxShadow: 'none',
+            padding: 0,
+          },
+        }}
+      />
+      
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold" style={{ color: colors.text }}>Lab Insights Dashboard</h1>
-            <p className="mt-1" style={{ color: colors.text + 'CC' }}>
-              AI-powered health insights and weekly progress tracking
-            </p>
+            <h1 className="text-2xl md:text-3xl font-bold" style={{ color: colors.text }}>
+              Welcome back, {user?.name || 'User'}! 👋
+            </h1>
+            <p className="text-gray-500 mt-1">Here's your health summary for this week</p>
           </div>
           
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleRefresh}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:opacity-90"
-              style={{ 
-                backgroundColor: colors.lightAccent,
-                color: colors.darkAccent
-              }}
-              disabled={loading}
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              {loading ? 'Refreshing...' : 'Refresh'}
-            </button>
-            
-            <button
-              onClick={handleGenerateReport}
-              disabled={generatingReport}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors hover:opacity-90"
-              style={{ 
-                backgroundColor: colors.accent,
-                color: '#FFFFFF'
-              }}
-            >
-              {generatingReport ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Generating...
-                </>
+          <button
+            onClick={handleDownloadReport}
+            disabled={generatingReport}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium hover:opacity-90 transition-colors disabled:opacity-50"
+          >
+            {generatingReport ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Generating...
+              </>
+            ) : (
+              <>
+                <BarChart3 className="w-4 h-4" />
+                Download Weekly Report
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Quick Stats Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <StatCard
+            title="Weekly Activity"
+            value={dashboardData.fitness.totalWorkouts + dashboardData.wellness.totalActivities}
+            icon={<Activity className="w-5 h-5" />}
+            color={colors.primary}
+            trend={5}
+          />
+          <StatCard
+            title="Sleep Average"
+            value={dashboardData.sleep.avgHours || 0}
+            unit="hrs"
+            icon={<Moon className="w-5 h-5" />}
+            color={colors.sleep}
+            trend={2}
+          />
+          <StatCard
+            title="Calories Burned"
+            value={dashboardData.fitness.totalCalories || 0}
+            unit="kcal"
+            icon={<Flame className="w-5 h-5" />}
+            color={colors.fitness}
+          />
+          <StatCard
+            title="Community Posts"
+            value={dashboardData.community.totalPosts || 0}
+            icon={<Users className="w-5 h-5" />}
+            color={colors.community}
+          />
+        </div>
+
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          {/* Female Health Section with SMART Pregnancy Tracking */}
+          <SectionCard title="Female Health" icon={<Droplets className="w-5 h-5" />} color={colors.female}>
+            <div className="space-y-4">
+              {/* Cycle Tracking */}
+              {dashboardData.femaleHealth.hasData ? (
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Last Cycle</span>
+                    <span className="font-medium text-gray-800">
+                      {formatDate(dashboardData.femaleHealth.lastCycle?.startDate)} - {formatDate(dashboardData.femaleHealth.lastCycle?.endDate)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Cycle Length</span>
+                    <span className="font-medium text-gray-800">{dashboardData.femaleHealth.cycleLength} days</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Next Cycle</span>
+                    <span className="font-medium text-pink-600">
+                      {formatDate(dashboardData.femaleHealth.nextCycle)}
+                      {new Date(dashboardData.femaleHealth.nextCycle) < new Date() && (
+                        <span className="text-xs text-red-500 ml-1">(Overdue)</span>
+                      )}
+                    </span>
+                  </div>
+                  {dashboardData.femaleHealth.ovulationWindow && (
+                    <div className="mt-2 pt-2 border-t border-gray-100">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">Ovulation Window</span>
+                        <span className="font-medium text-purple-600">
+                          {formatDate(dashboardData.femaleHealth.ovulationWindow.start)} - {formatDate(dashboardData.femaleHealth.ovulationWindow.end)}
+                        </span>
+                      </div>
+                      {new Date() >= dashboardData.femaleHealth.ovulationWindow.start && 
+                       new Date() <= dashboardData.femaleHealth.ovulationWindow.end && (
+                        <div className="mt-2 text-xs text-pink-500 bg-pink-50 p-2 rounded-lg">
+                          🌸 You are currently in your fertile window!
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               ) : (
-                <>
-                  <FileText className="w-4 h-4" />
-                  Generate Report
-                </>
+                <div className="text-center py-3">
+                  <Calendar className="w-10 h-10 mx-auto mb-2 opacity-50" style={{ color: colors.text }} />
+                  <p className="text-gray-500 text-sm">No cycle data yet</p>
+                  <button 
+                    onClick={() => navigate('/female-health/cycle')}
+                    className="mt-2 text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-pink-500 to-rose-500 text-white"
+                  >
+                    Log Cycle
+                  </button>
+                </div>
               )}
-            </button>
-          </div>
-        </div>
-        
-        {/* Tabs */}
-        <div className="flex gap-2 mt-6 border-b" style={{ borderColor: colors.text + '20' }}>
-          <button
-            onClick={() => setActiveTab('weekly')}
-            className={`px-4 py-2 font-medium transition-colors ${activeTab === 'weekly' ? 'border-b-2' : ''}`}
-            style={{
-              color: activeTab === 'weekly' ? colors.accent : colors.text + 'CC',
-              borderColor: activeTab === 'weekly' ? colors.accent : 'transparent'
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Weekly Overview
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('insights')}
-            className={`px-4 py-2 font-medium transition-colors ${activeTab === 'insights' ? 'border-b-2' : ''}`}
-            style={{
-              color: activeTab === 'insights' ? colors.accent : colors.text + 'CC',
-              borderColor: activeTab === 'insights' ? colors.accent : 'transparent'
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <Brain className="w-4 h-4" />
-              AI Insights
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('activity')}
-            className={`px-4 py-2 font-medium transition-colors ${activeTab === 'activity' ? 'border-b-2' : ''}`}
-            style={{
-              color: activeTab === 'activity' ? colors.accent : colors.text + 'CC',
-              borderColor: activeTab === 'activity' ? colors.accent : 'transparent'
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <ActivitySquare className="w-4 h-4" />
-              Activity Log
-            </div>
-          </button>
-        </div>
-      </div>
-
-      {/* Error Message */}
-      {error && (
-        <div className="mb-6 p-4 rounded-lg flex items-start gap-3" style={{ backgroundColor: `${colors.error}15`, borderLeft: `4px solid ${colors.error}` }}>
-          <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: colors.error }} />
-          <div>
-            <p className="font-medium" style={{ color: colors.error }}>Error</p>
-            <p className="text-sm" style={{ color: colors.text }}>{error}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Weekly Overview Tab */}
-      {activeTab === 'weekly' && dashboardData && (
-        <>
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium" style={{ color: colors.text + 'CC' }}>Sleep Hours</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-                    {dashboardData.weeklySummary?.totalSleepHours?.toFixed(1) || '0.0'}h
-                  </p>
-                  <p className="text-sm mt-1" style={{ color: colors.sleep }}>
-                    Quality: {dashboardData.weeklySummary?.avgSleepQuality || '0'}/10
-                  </p>
-                </div>
-                <div className="p-3 rounded-full" style={{ backgroundColor: colors.sleep + '20' }}>
-                  <Moon className="w-6 h-6" style={{ color: colors.sleep }} />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium" style={{ color: colors.text + 'CC' }}>Workouts</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-                    {dashboardData.weeklySummary?.totalWorkouts || 0}
-                  </p>
-                  <p className="text-sm mt-1" style={{ color: colors.fitness }}>
-                    ~{dashboardData.weeklySummary?.avgCaloriesBurned || 0} calories
-                  </p>
-                </div>
-                <div className="p-3 rounded-full" style={{ backgroundColor: colors.fitness + '20' }}>
-                  <Dumbbell className="w-6 h-6" style={{ color: colors.fitness }} />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium" style={{ color: colors.text + 'CC' }}>Self-Care</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-                    {dashboardData.weeklySummary?.totalSelfCare || 0}
-                  </p>
-                  <p className="text-sm mt-1" style={{ color: colors.selfcare }}>
-                    Activities completed
-                  </p>
-                </div>
-                <div className="p-3 rounded-full" style={{ backgroundColor: colors.selfcare + '20' }}>
-                  <Brain className="w-6 h-6" style={{ color: colors.selfcare }} />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium" style={{ color: colors.text + 'CC' }}>Community</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: colors.text }}>
-                    {dashboardData.weeklySummary?.totalPosts || 0}
-                  </p>
-                  <p className="text-sm mt-1" style={{ color: colors.community }}>
-                    Posts & interactions
-                  </p>
-                </div>
-                <div className="p-3 rounded-full" style={{ backgroundColor: colors.community + '20' }}>
-                  <Users className="w-6 h-6" style={{ color: colors.community }} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Weekly Activity Chart */}
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold" style={{ color: colors.text }}>Weekly Activity Summary</h3>
-                <BarChart3 className="w-5 h-5" style={{ color: colors.text + '80' }} />
-              </div>
-              <div className="h-64">
-                {prepareWeeklyChartData() ? (
-                  <Bar data={prepareWeeklyChartData()} options={chartOptions} />
-                ) : (
-                  <div className="h-full flex items-center justify-center" style={{ color: colors.text + '80' }}>
-                    <p>No activity data available for this week</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Sleep Quality Chart */}
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold" style={{ color: colors.text }}>Sleep Quality Trend</h3>
-                <TrendingUp className="w-5 h-5" style={{ color: colors.text + '80' }} />
-              </div>
-              <div className="h-64">
-                {prepareSleepQualityChartData() ? (
-                  <Line data={prepareSleepQualityChartData()} options={lineChartOptions} />
-                ) : (
-                  <div className="h-full flex items-center justify-center" style={{ color: colors.text + '80' }}>
-                    <p>No sleep data available</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* AI Summary */}
-          {dashboardData.aiSummary && (
-            <div className="mb-6 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-full" style={{ backgroundColor: colors.accent + '20' }}>
-                  <Brain className="w-5 h-5" style={{ color: colors.accent }} />
-                </div>
-                <h3 className="font-bold" style={{ color: colors.text }}>AI Wellness Summary</h3>
-              </div>
-              <p style={{ color: colors.text, lineHeight: '1.6' }}>
-                {dashboardData.aiSummary}
-              </p>
-            </div>
-          )}
-
-          {/* Recent Insights Preview */}
-          {dashboardData.recentInsights && dashboardData.recentInsights.length > 0 && (
-            <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-              <h3 className="font-bold mb-4" style={{ color: colors.text }}>Recent Insights</h3>
-              <div className="space-y-3">
-                {dashboardData.recentInsights.slice(0, 3).map((insight, index) => (
-                  <div key={index} className="p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                    <div className="flex items-center gap-2 mb-1">
-                      {getCategoryIcon(insight.category)}
-                      <span className="font-medium" style={{ color: getCategoryColor(insight.category) }}>
-                        {getCategoryDisplayName(insight.category)}
-                      </span>
-                    </div>
-                    <p className="text-sm" style={{ color: colors.text + 'CC' }}>
-                      {insight.summary}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Insights Tab */}
-      {activeTab === 'insights' && (
-        <div className="space-y-6">
-          {/* Generate New Insights */}
-          <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-            <h3 className="font-bold mb-4" style={{ color: colors.text }}>Generate New Insights</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                {['sleepRecovery', 'fitness', 'nutrition', 'selfCare'].map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => handleGenerateInsight(category)}
-                    disabled={loading}
-                    className="p-4 rounded-lg text-center transition-all hover:scale-[1.02] disabled:opacity-50"
-                    style={{ 
-                      backgroundColor: getCategoryColor(category) + '15',
-                      color: getCategoryColor(category),
-                      border: `2px solid ${getCategoryColor(category)}20`
-                    }}
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="p-2 rounded-full" style={{ backgroundColor: getCategoryColor(category) + '30' }}>
-                        {getCategoryIcon(category)}
-                      </div>
-                      <span className="text-sm font-medium capitalize">
-                        {getCategoryDisplayName(category)}
-                      </span>
-                      <span className="text-xs opacity-75">Weekly Data</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                {['community', 'femaleHealth', 'menHealth', 'blood-test'].map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => handleGenerateAllTimeInsight(category)}
-                    disabled={loading}
-                    className="p-4 rounded-lg text-center transition-all hover:scale-[1.02] disabled:opacity-50"
-                    style={{ 
-                      backgroundColor: getCategoryColor(category) + '15',
-                      color: getCategoryColor(category),
-                      border: `2px solid ${getCategoryColor(category)}20`
-                    }}
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="p-2 rounded-full" style={{ backgroundColor: getCategoryColor(category) + '30' }}>
-                        {getCategoryIcon(category)}
+              {/* Pregnancy Tracking - SMART CALCULATION */}
+              {dashboardData.femaleHealth.pregnancy.hasData ? (
+                <div className="mt-4 pt-3 border-t border-pink-200 bg-pink-50/50 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Baby className="w-4 h-4 text-pink-500" />
+                    <span className="font-semibold text-pink-700 text-sm">Pregnancy Tracker</span>
+                    <span className="text-xs text-pink-500 ml-auto">
+                      Updated: {new Date().toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    {dashboardData.femaleHealth.pregnancy.conceptionDate && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Conception Date</span>
+                        <span className="font-medium text-pink-600">{formatDate(dashboardData.femaleHealth.pregnancy.conceptionDate)}</span>
                       </div>
-                      <span className="text-sm font-medium capitalize">
-                        {getCategoryDisplayName(category)}
-                      </span>
-                      <span className="text-xs opacity-75">All Time Data</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Insights */}
-          <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold" style={{ color: colors.text }}>Your Insights</h3>
-              <span className="text-sm" style={{ color: colors.text + '80' }}>
-                {insights.length} total insights
-              </span>
-            </div>
-            <div className="space-y-4">
-              {insights.length > 0 ? (
-                insights.map((insight) => (
-                  <div
-                    key={insight._id}
-                    className="p-4 rounded-lg border"
-                    style={{ 
-                      backgroundColor: colors.background,
-                      borderColor: getCategoryColor(insight.category) + '40',
-                      borderLeft: `4px solid ${getCategoryColor(insight.category)}`
-                    }}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="p-2 rounded-full"
-                          style={{ backgroundColor: getCategoryColor(insight.category) + '20' }}
-                        >
-                          {getCategoryIcon(insight.category)}
-                        </div>
-                        <div>
-                          <h4 className="font-bold" style={{ color: colors.text }}>
-                            {getCategoryDisplayName(insight.category)} Analysis
-                          </h4>
-                          <p className="text-sm mt-1" style={{ color: colors.text + 'CC' }}>
-                            {insight.summary}
-                          </p>
-                        </div>
+                    )}
+                    {dashboardData.femaleHealth.pregnancy.dueDate && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Due Date</span>
+                        <span className="font-medium text-pink-600">{formatDate(dashboardData.femaleHealth.pregnancy.dueDate)}</span>
                       </div>
-                      <span className="text-sm whitespace-nowrap" style={{ color: colors.text + '80' }}>
-                        {formatDate(insight.createdAt)}
-                      </span>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Current Week</span>
+                      <span className="font-medium text-pink-600">{dashboardData.femaleHealth.pregnancy.weeksPregnant} weeks</span>
                     </div>
-                    
-                    {insight.aiGeneratedTips && insight.aiGeneratedTips.length > 0 && (
-                      <div className="mt-3 pt-3 border-t" style={{ borderColor: getCategoryColor(insight.category) + '20' }}>
-                        <p className="text-sm font-medium mb-2" style={{ color: colors.text }}>
-                          AI Recommendations:
-                        </p>
-                        <ul className="space-y-2">
-                          {insight.aiGeneratedTips.map((tip, index) => (
-                            <li key={index} className="text-sm flex items-start gap-2" style={{ color: colors.text + 'CC' }}>
-                              <span className="mt-1 w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: getCategoryColor(insight.category) }}></span>
-                              {tip}
-                            </li>
-                          ))}
-                        </ul>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Trimester</span>
+                      <span className="font-medium text-pink-600">{dashboardData.femaleHealth.pregnancy.trimester}</span>
+                    </div>
+                    {dashboardData.femaleHealth.pregnancy.weeksPregnant > 0 && (
+                      <div className="mt-2 pt-2 border-t border-pink-100">
+                        <div className="text-xs text-pink-600 flex items-center gap-1">
+                          <span>📅</span>
+                          <span>Estimated delivery in {40 - dashboardData.femaleHealth.pregnancy.weeksPregnant} weeks</span>
+                        </div>
+                        {dashboardData.femaleHealth.pregnancy.weeksPregnant <= 12 && (
+                          <div className="mt-1 text-xs text-purple-500 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            <span>First trimester: Focus on folic acid and prenatal vitamins</span>
+                          </div>
+                        )}
+                        {dashboardData.femaleHealth.pregnancy.weeksPregnant > 12 && dashboardData.femaleHealth.pregnancy.weeksPregnant <= 28 && (
+                          <div className="mt-1 text-xs text-blue-500 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            <span>Second trimester: Baby is growing rapidly!</span>
+                          </div>
+                        )}
+                        {dashboardData.femaleHealth.pregnancy.weeksPregnant > 28 && (
+                          <div className="mt-1 text-xs text-green-500 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            <span>Third trimester: Prepare for baby's arrival</span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                ))
+                  <button 
+                    onClick={() => navigate('/female-health/pregnancy')}
+                    className="mt-3 w-full text-xs py-1.5 rounded-lg bg-pink-100 text-pink-700 hover:bg-pink-200 transition-colors"
+                  >
+                    Update Pregnancy
+                  </button>
+                </div>
               ) : (
-                <div className="text-center py-8" style={{ color: colors.text + '80' }}>
-                  <Brain className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No insights generated yet. Generate your first insight above!</p>
-                  <p className="text-sm mt-2">Select a category to analyze your data</p>
+                <div className="mt-3 pt-2 border-t border-gray-100">
+                  <button 
+                    onClick={() => navigate('/female-health/pregnancy')}
+                    className="w-full text-xs py-1.5 rounded-lg border border-pink-200 text-pink-600 hover:bg-pink-50 transition-colors flex items-center justify-center gap-1"
+                  >
+                    <Baby className="w-3 h-3" />
+                    Track Pregnancy
+                  </button>
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
+          </SectionCard>
 
-      {/* Activity Tab */}
-      {activeTab === 'activity' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Activity Stats */}
-          <div className="lg:col-span-2 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-            <h3 className="font-bold mb-4" style={{ color: colors.text }}>Activity Overview</h3>
-            <div className="h-80">
-              {prepareActivityTrendData() ? (
-                <Bar data={prepareActivityTrendData()} options={chartOptions} />
-              ) : (
-                <div className="h-full flex items-center justify-center" style={{ color: colors.text + '80' }}>
-                  <p>No activity data available</p>
+          {/* Men's Health Section */}
+          <SectionCard title="Men's Health" icon={<Shield className="w-5 h-5" />} color={colors.male}>
+            {dashboardData.menHealth.hasData ? (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Health Status</span>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getHealthStatusColor(dashboardData.menHealth.healthStatus)}`}>
+                    {dashboardData.menHealth.healthStatus}
+                    {dashboardData.menHealth.healthStatus === 'Excellent' && ' 🎯'}
+                    {dashboardData.menHealth.healthStatus === 'Good' && ' ✓'}
+                    {dashboardData.menHealth.healthStatus === 'Fair' && ' ⚠️'}
+                    {dashboardData.menHealth.healthStatus === 'Needs Attention' && ' ⚠️'}
+                  </span>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-            <h3 className="font-bold mb-4" style={{ color: colors.text }}>Quick Stats</h3>
-            <div className="space-y-4">
-              {activityStats ? (
-                <>
-                  <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                    <div className="flex items-center gap-3">
-                      <Moon className="w-4 h-4" style={{ color: colors.sleep }} />
-                      <span style={{ color: colors.text }}>Sleep Records</span>
+                
+                <div className="flex items-center justify-center mb-2">
+                  <div className="relative w-24 h-24">
+                    <svg className="w-24 h-24 transform -rotate-90">
+                      <circle cx="48" cy="48" r="42" stroke="currentColor" strokeWidth="8" fill="none" className="text-gray-200" />
+                      <circle cx="48" cy="48" r="42" stroke="currentColor" strokeWidth="8" fill="none" strokeDasharray={`${(dashboardData.menHealth.healthScore / 100) * 264} 264`} className="text-blue-500 transition-all duration-500" style={{ strokeDashoffset: 0 }} />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">{dashboardData.menHealth.healthScore}</div>
+                        <div className="text-xs text-gray-500">Score</div>
+                      </div>
                     </div>
-                    <span className="font-bold" style={{ color: colors.text }}>{activityStats.recordCounts?.sleep || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                    <div className="flex items-center gap-3">
-                      <Dumbbell className="w-4 h-4" style={{ color: colors.fitness }} />
-                      <span style={{ color: colors.text }}>Workout Sessions</span>
-                    </div>
-                    <span className="font-bold" style={{ color: colors.text }}>{activityStats.recordCounts?.fitness || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                    <div className="flex items-center gap-3">
-                      <Heart className="w-4 h-4" style={{ color: colors.nutrition }} />
-                      <span style={{ color: colors.text }}>Nutrition Logs</span>
-                    </div>
-                    <span className="font-bold" style={{ color: colors.text }}>{activityStats.recordCounts?.nutrition || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                    <div className="flex items-center gap-3">
-                      <Brain className="w-4 h-4" style={{ color: colors.selfcare }} />
-                      <span style={{ color: colors.text }}>Self-Care Activities</span>
-                    </div>
-                    <span className="font-bold" style={{ color: colors.text }}>{activityStats.recordCounts?.selfCare || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                    <div className="flex items-center gap-3">
-                      <Users className="w-4 h-4" style={{ color: colors.community }} />
-                      <span style={{ color: colors.text }}>Community Posts</span>
-                    </div>
-                    <span className="font-bold" style={{ color: colors.text }}>{activityStats.recordCounts?.community || 0}</span>
-                  </div>
-                </>
-              ) : (
-                <div className="text-center py-8" style={{ color: colors.text + '80' }}>
-                  <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Loading activity stats...</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Report History */}
-          <div className="lg:col-span-3 p-4 rounded-xl shadow-sm" style={{ backgroundColor: colors.card }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold" style={{ color: colors.text }}>Reports</h3>
-              <button
-                onClick={handleGenerateReport}
-                disabled={generatingReport}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-colors hover:opacity-90"
-                style={{ 
-                  backgroundColor: colors.lightAccent,
-                  color: colors.darkAccent
-                }}
-              >
-                <FileText className="w-4 h-4" />
-                {generatingReport ? 'Generating...' : 'New Report'}
-              </button>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: colors.background }}>
-                <div className="flex items-center gap-3">
-                  <FileText className="w-4 h-4" style={{ color: colors.accent }} />
-                  <div>
-                    <p className="font-medium" style={{ color: colors.text }}>Weekly Health Report</p>
-                    <p className="text-sm" style={{ color: colors.text + '80' }}>
-                      Generated on {new Date().toLocaleDateString()}
-                    </p>
                   </div>
                 </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-red-50 rounded-lg p-3 text-center">
+                    <div className="text-sm text-gray-500">Stress Level</div>
+                    <div className="text-xl font-bold text-red-600">{dashboardData.menHealth.averageStress}/10</div>
+                  </div>
+                  <div className="bg-green-50 rounded-lg p-3 text-center">
+                    <div className="text-sm text-gray-500">Energy Level</div>
+                    <div className="text-xl font-bold text-green-600">{dashboardData.menHealth.averageEnergy}/10</div>
+                  </div>
+                  <div className="bg-purple-50 rounded-lg p-3 text-center">
+                    <div className="text-sm text-gray-500">Sleep Hours</div>
+                    <div className="text-xl font-bold text-purple-600">{dashboardData.menHealth.averageSleep}h</div>
+                  </div>
+                  <div className="bg-orange-50 rounded-lg p-3 text-center">
+                    <div className="text-sm text-gray-500">Workouts/Week</div>
+                    <div className="text-xl font-bold text-orange-600">{dashboardData.menHealth.workoutDays} days</div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                  <span className="text-gray-500">Last Checkup</span>
+                  <span className="font-medium text-gray-800">
+                    {dashboardData.menHealth.lastCheckup 
+                      ? formatDate(dashboardData.menHealth.lastCheckup)
+                      : 'Not recorded'}
+                  </span>
+                </div>
+                
+                {dashboardData.menHealth.recentMoods.length > 0 && (
+                  <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Brain className="w-4 h-4 text-purple-500" />
+                      <span className="text-sm font-medium text-gray-700">Recent Mood Trend</span>
+                    </div>
+                    <div className="flex gap-2">
+                      {dashboardData.menHealth.recentMoods.slice(0, 7).map((mood, idx) => (
+                        <div key={idx} className="flex flex-col items-center">
+                          <div className="text-xl">{getMoodEmoji(mood)}</div>
+                          <div className="text-xs text-gray-500 mt-1">{idx + 1}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
                 <button 
-                  onClick={handleGenerateReport}
-                  className="p-1.5 rounded transition-colors hover:opacity-90"
-                  style={{ backgroundColor: colors.lightAccent }}
+                  onClick={() => navigate('/men-health')}
+                  className="w-full py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium hover:opacity-90 transition-colors flex items-center justify-center gap-2"
                 >
-                  <Download className="w-4 h-4" style={{ color: colors.darkAccent }} />
+                  <Shield className="w-4 h-4" />
+                  Update Health Data
                 </button>
               </div>
+            ) : (
+              <div className="text-center py-6">
+                <Shield className="w-12 h-12 mx-auto mb-3 opacity-50" style={{ color: colors.text }} />
+                <p className="text-gray-500">No health data yet</p>
+                <p className="text-xs text-gray-400 mt-1">Track your health to see insights</p>
+                <button 
+                  onClick={() => navigate('/men-health')}
+                  className="mt-4 text-sm px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+                >
+                  Log Health Data
+                </button>
+              </div>
+            )}
+          </SectionCard>
+
+          {/* Sleep & Recovery Chart */}
+          <SectionCard title="Sleep & Recovery" icon={<Moon className="w-5 h-5" />} color={colors.sleep}>
+            <div className="h-48 mb-4">
+              {trends.sleep.length > 0 ? (
+                <Line data={sleepChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+                  No sleep data available
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-purple-600">{dashboardData.sleep.avgHours || 0}h</p>
+                <p className="text-sm text-gray-500">Average Sleep</p>
+              </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-purple-600">{dashboardData.sleep.avgQuality || 0}/10</p>
+                <p className="text-sm text-gray-500">Sleep Quality</p>
+              </div>
+            </div>
+          </SectionCard>
+
+          {/* Fitness & Nutrition Chart */}
+          <SectionCard title="Fitness & Nutrition" icon={<Dumbbell className="w-5 h-5" />} color={colors.fitness}>
+            <div className="h-48 mb-4">
+              {trends.calories.length > 0 || trends.workouts.length > 0 ? (
+                <Line data={calorieChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+                  No fitness or nutrition data available
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-green-600">{dashboardData.fitness.totalWorkouts || 0}</p>
+                <p className="text-sm text-gray-500">Workouts This Week</p>
+              </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <p className="text-2xl font-bold text-orange-600">{dashboardData.fitness.totalCalories || 0}</p>
+                <p className="text-sm text-gray-500">Calories Burned</p>
+              </div>
+            </div>
+          </SectionCard>
+
+          {/* Nutrition Macros */}
+          <SectionCard title="Nutrition Overview" icon={<UtensilsCrossed className="w-5 h-5" />} color={colors.nutrition}>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600">{dashboardData.nutrition.avgCalories || 0}</p>
+                <p className="text-sm text-gray-500">Avg Daily Calories</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{dashboardData.nutrition.totalProtein || 0}g</p>
+                <p className="text-sm text-gray-500">Total Protein</p>
+              </div>
+            </div>
+            <div className="h-32">
+              {dashboardData.nutrition.totalProtein > 0 || dashboardData.nutrition.totalCarbs > 0 || dashboardData.nutrition.totalFats > 0 ? (
+                <Doughnut data={macroChartData} options={{ responsive: true, maintainAspectRatio: false }} />
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+                  No nutrition data available
+                </div>
+              )}
+            </div>
+          </SectionCard>
+
+          {/* Wellness Activities */}
+          <SectionCard title="Wellness Activities" icon={<Brain className="w-5 h-5" />} color={colors.wellness}>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Activities Completed</span>
+                <span className="text-2xl font-bold text-pink-600">{dashboardData.wellness.totalActivities || 0}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Average Mood</span>
+                <div className="flex items-center gap-1">
+                  {dashboardData.wellness.moodScores.length > 0 ? (
+                    <>
+                      <span className="text-lg">{['😢', '😐', '🙂', '😊', '😄'][Math.round(dashboardData.wellness.moodScores.reduce((a,b)=>a+b,0)/dashboardData.wellness.moodScores.length) - 1] || '🙂'}</span>
+                      <span className="font-medium">
+                        {Math.round(dashboardData.wellness.moodScores.reduce((a,b)=>a+b,0)/dashboardData.wellness.moodScores.length)}/5
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-gray-400">No data</span>
+                  )}
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <p className="text-sm text-gray-500">Quick activities:</p>
+                <div className="flex gap-2 mt-2">
+                  <button className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">Meditate</button>
+                  <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">Journal</button>
+                  <button className="px-3 py-1 bg-purple-50 text-purple-600 rounded-full text-sm">Stretch</button>
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+        </div>
+
+        {/* Community Activity */}
+        <SectionCard title="Community Activity" icon={<Users className="w-5 h-5" />} color={colors.community}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <p className="text-2xl font-bold text-indigo-600">{dashboardData.community.totalPosts || 0}</p>
+              <p className="text-sm text-gray-500">Posts</p>
+            </div>
+            <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <p className="text-2xl font-bold text-indigo-600">{dashboardData.community.totalLikes || 0}</p>
+              <p className="text-sm text-gray-500">Likes Received</p>
+            </div>
+            <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <p className="text-2xl font-bold text-indigo-600">{dashboardData.community.totalComments || 0}</p>
+              <p className="text-sm text-gray-500">Comments</p>
             </div>
           </div>
-        </div>
-      )}
+          <button 
+            onClick={() => navigate('/community')}
+            className="w-full py-2 rounded-lg border-2 border-indigo-200 text-indigo-600 font-medium hover:bg-indigo-50 transition-colors"
+          >
+            Go to Community
+          </button>
+        </SectionCard>
+
+        {/* Recent Activity Feed */}
+        <SectionCard title="Recent Activity" icon={<Clock className="w-5 h-5" />} color={colors.primary}>
+          <div className="space-y-3">
+            {dashboardData.recentActivity.length > 0 ? (
+              dashboardData.recentActivity.slice(0, 5).map((activity, idx) => (
+                <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="p-2 bg-white rounded-lg shadow-sm">
+                    {activity.icon}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-800">{activity.title}</p>
+                    <p className="text-sm text-gray-500">{activity.description}</p>
+                  </div>
+                  <span className="text-xs text-gray-400">{formatTimeAgo(activity.time)}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-6">
+                <Activity className="w-12 h-12 mx-auto mb-3 opacity-50" style={{ color: colors.text }} />
+                <p className="text-gray-500">No recent activity</p>
+                <p className="text-sm text-gray-400">Start tracking your health to see activity here</p>
+              </div>
+            )}
+          </div>
+        </SectionCard>
+      </div>
     </div>
   );
 };
