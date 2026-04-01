@@ -17,11 +17,11 @@ import CommunityPost from './pages/Community/communityPost';
 import ArticleDetails from './pages/FemaleHealth/articleDetails';
 
 // Protected Route Wrapper
-// const ProtectedRoute = ({ children }) => {
-//   const { state } = useApp();
-//   const isLoggedIn = !!state.user; // check if user is logged in
-//   return isLoggedIn ? children : <Navigate to="/login" />;
-// };
+const ProtectedRoute = ({ children }) => {
+  const { state } = useApp();
+  const isLoggedIn = !!state.user; // check if user is logged in
+  return isLoggedIn ? children : <Navigate to="/login" />;
+};
 
 function AppRoutes() {
   return (
@@ -37,10 +37,10 @@ function AppRoutes() {
       <Route
         path="/female-health/*"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <FemaleHealth />
             
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
       <Route path="/female-health/education/:id" element={<ArticleDetails />} />
@@ -48,49 +48,49 @@ function AppRoutes() {
       <Route
         path="/men-health/*"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <MenHealth />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
       <Route
         path="/fitness-nutrition"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <FitnessNutrition />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
       <Route
         path="/sleep-recovery"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <SleepRecovery />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
       <Route
         path="/self-care"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <SelfCare />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
       <Route
         path="/community"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <CommunityPost />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
       <Route
         path="/labinsights"
         element={
-          // <ProtectedRoute>
+           <ProtectedRoute>
             <LabInsights />
-          // </ProtectedRoute>
+           </ProtectedRoute>
         }
       />
 
