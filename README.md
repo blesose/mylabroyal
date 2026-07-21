@@ -168,7 +168,7 @@ If you found this project useful, consider giving it a ⭐ on GitHub.
 
 **Blessing Oga**
 
-Junior Full Stack Developer (MERN)
+Junior Software Engineer
 
 - GitHub: https://github.com/blesose
 - LinkedIn: https://linkedin.com/in/blessing-oga-53bb443a7
