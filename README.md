@@ -1,12 +1,13 @@
 <div align="center">
 
-# 🩺 MyLab
+#  MyLab
 
 ### Your Digital Companion for Healthier Living
 
 A modern health and wellness platform that empowers individuals through trusted health education, self-care resources, and a supportive community.
 
-![Banner](assets/banner.png)
+<img width="1774" height="887" alt="banner" src="https://github.com/user-attachments/assets/d851d228-f8c9-415f-98cf-d696d1e5a075" />
+
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
@@ -26,7 +27,7 @@ A modern health and wellness platform that empowers individuals through trusted 
 
 ---
 
-# 📖 About
+# About
 
 MyLab is a full-stack health and wellness platform designed to make reliable health information, self-care tools, and supportive communities accessible to everyone.
 
@@ -38,22 +39,18 @@ Whether users want to improve their physical health, strengthen their mental wel
 
 # ✨ Features
 
-- 🔐 Secure JWT Authentication
-- 👤 Personalized User Profiles
-- 👥 Community Discussions
+-  Secure JWT Authentication
+-  Community Discussions
 - ❤️ Like & Comment System
-- 📰 Health Articles
-- 🔍 Search & Filtering
+-  Health Articles
 - 📱 Fully Responsive Design
-- 🌸 Women's Health
-- 👨 Men's Health
-- 🧠 Mental Health
-- 💪 Fitness & Nutrition
-- 🌿 Self-Care Resources
-- 📰 Lab Insights
-- ⏰ Automated Cron Jobs
-- 🚀 Bull Queue Background Processing
-- ⚡ RESTful API
+-  Women's Health
+-  Men's Health
+-  Mental Health
+-  Fitness & Nutrition
+-  Self-Care Resources
+-  Dashboard
+-  RESTful API
 
 ---
 
@@ -61,13 +58,13 @@ Whether users want to improve their physical health, strengthen their mental wel
 
 | Category | Description |
 |----------|-------------|
-| 🌸 Women's Health | Menstrual health, pregnancy, hormonal wellness, reproductive care |
-| 👨 Men's Health | Fitness, reproductive health, prostate health, lifestyle |
-| 🧠 Mental Health | Anxiety, stress management, mindfulness, emotional wellness |
-| 💪 Fitness & Nutrition | Workouts, healthy meals, nutrition education |
-| 🌿 Self-Care | Sleep, hydration, skincare, productivity, personal development |
-| 👥 Community | Share experiences, ask questions, support others |
-| 📰 Lab Insights | Evidence-based health articles and wellness tips |
+|  Women's Health | Menstrual health, pregnancy, hormonal wellness, reproductive care |
+|  Men's Health | Fitness, reproductive health, prostate health, lifestyle |
+|  Mental wellbeing | Anxiety, stress management, mindfulness, emotional wellness |
+|  Fitness & Nutrition | Workouts, healthy meals, nutrition education |
+|  Self-Care | Sleep, hydration, skincare, productivity, personal development |
+|  Community | Share experiences, ask questions, support others |
+|  Dashboard | Evidence-based health data and wellness |
 
 ---
 
@@ -75,49 +72,57 @@ Whether users want to improve their physical health, strengthen their mental wel
 
 ## 🏠 Home
 
-![Home](assets/screenshots/home.png)
+<img width="716" height="617" alt="Screenshot 2026-07-20 213007" src="https://github.com/user-attachments/assets/0d3d89ae-f32f-4a30-8c2b-fe5c07e81a66" />
+
 
 ---
 
 ## 🔐 Authentication
 
-![Login](assets/screenshots/login.png)
+<img width="332" height="563" alt="Screenshot 2026-07-20 225013" src="https://github.com/user-attachments/assets/8f79f31a-934c-4459-8a36-010e40494bc8" />
+
 
 ---
 
 ## 🌸 Women's Health
 
-![Women's Health](assets/screenshots/women-health.png)
+<img width="543" height="608" alt="Screenshot 2026-07-20 213311" src="https://github.com/user-attachments/assets/9d62b46e-1b70-4448-83bb-0b09a0f089c7" />
+
 
 ---
 
-## 🧠 Mental Health
+## 🧠 Men's Health
 
-![Mental Health](assets/screenshots/mental-health.png)
+<img width="718" height="632" alt="Screenshot 2026-07-20 213330" src="https://github.com/user-attachments/assets/a6975e15-b14f-4a9e-b2b2-67d32f3c73bf" />
+
 
 ---
 
 ## 👥 Community
 
-![Community](assets/screenshots/community.png)
+<img width="757" height="429" alt="Screenshot 2026-07-21 010224" src="https://github.com/user-attachments/assets/45617814-f068-4088-8ce9-31468cbed8f9" />
+
 
 ---
 
-## 📰 Lab Insights
+## 📰 Dashboard
 
-![Lab Insights](assets/screenshots/insights.png)
+<img width="850" height="653" alt="Screenshot 2026-07-21 010143" src="https://github.com/user-attachments/assets/e91421de-c793-4a68-beae-829f0b34d9a8" />
+
 
 ---
 
-## 👤 Profile
+## 👤 Fitness & Nutrition
 
-![Profile](assets/screenshots/profile.png)
+<img width="684" height="621" alt="Screenshot 2026-07-20 213643" src="https://github.com/user-attachments/assets/6d5846e5-42bb-487d-b408-566a8211036d" />
+
 
 ---
 
 ## 📱 Mobile Responsive
 
-![Mobile](assets/screenshots/mobile.png)
+<img width="206" height="460" alt="Screenshot 2026-07-21 010328" src="https://github.com/user-attachments/assets/a5299b34-4372-4377-816a-4071ece0aa0b" />
+
 
 ---
 
