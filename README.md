@@ -19,7 +19,7 @@ A modern health and wellness platform that empowers individuals through trusted 
 
 ---
 
-# 🎥 Demo
+# 🎥 Demo  https://mylabroyal.onrender.com
 
 <p align="center">
   <img src="assets/demo.gif" alt="MyLab Demo" width="100%">
